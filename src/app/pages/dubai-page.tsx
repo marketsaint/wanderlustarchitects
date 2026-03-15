@@ -25,12 +25,12 @@ const heroAreas = ['Palm Jumeirah', 'Downtown Dubai', 'Business Bay', 'Dubai Hil
 const trustMetrics = [
   { value: '24h', label: 'First response on Dubai briefs' },
   { value: `${projects.length}+`, label: 'Projects across hospitality, villas, and workplace interiors' },
-  { value: 'BOQ-Ready', label: 'Drawing and execution package discipline', valueClassName: 'text-[clamp(1.65rem,2vw,2.15rem)]' },
+  { value: 'BOQ-Ready', label: 'Drawing and execution package discipline', valueClassName: 'text-[clamp(1.45rem,1.7vw,1.85rem)]' },
   {
     value: '+971 54 505',
     valueLines: ['+971 54 505', '2126'],
     label: 'Direct Dubai contact line',
-    valueClassName: 'text-[clamp(1.1rem,1.3vw,1.3rem)] leading-[1.05] tracking-[-0.03em]',
+    valueClassName: 'text-[clamp(0.96rem,1.05vw,1.05rem)] leading-[1.02] tracking-[-0.02em]',
   },
 ];
 
@@ -253,9 +253,9 @@ export default function DubaiPage() {
           <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-4'>
             {trustMetrics.map((metric, index) => (
               <Reveal key={metric.label} delay={index * 0.05} className='h-full'>
-                <article className='flex h-full min-h-[170px] flex-col justify-between rounded-[26px] border border-[#dcc6a3]/55 bg-white/90 p-5 shadow-[0_18px_48px_rgba(58,32,11,0.08)] backdrop-blur-md'>
+                <article className='flex h-full min-h-[148px] flex-col justify-between rounded-[24px] border border-[#dcc6a3]/55 bg-white/90 p-4 shadow-[0_18px_48px_rgba(58,32,11,0.08)] backdrop-blur-md'>
                   {metric.valueLines ? (
-                    <div className={`text-[clamp(1.8rem,2vw,2.2rem)] text-[#1a140d] ${metric.valueClassName ?? ''}`}>
+                    <div className={`text-[clamp(1.45rem,1.65vw,1.7rem)] text-[#1a140d] ${metric.valueClassName ?? ''}`}>
                       {metric.valueLines.map((line) => (
                         <span key={line} className='block'>
                           {line}
@@ -263,9 +263,9 @@ export default function DubaiPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className={`text-[clamp(1.85rem,2.15vw,2.3rem)] leading-none text-[#1a140d] ${metric.valueClassName ?? ''}`}>{metric.value}</p>
+                    <p className={`text-[clamp(1.55rem,1.8vw,1.95rem)] leading-none text-[#1a140d] ${metric.valueClassName ?? ''}`}>{metric.value}</p>
                   )}
-                  <p className='mt-3 text-[11px] uppercase tracking-[0.24em] text-[#8c7758]'>{metric.label}</p>
+                  <p className='mt-2 text-[10px] uppercase tracking-[0.18em] text-[#8c7758]'>{metric.label}</p>
                 </article>
               </Reveal>
             ))}
