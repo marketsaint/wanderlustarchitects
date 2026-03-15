@@ -25,11 +25,11 @@ const heroAreas = ['Palm Jumeirah', 'Downtown Dubai', 'Business Bay', 'Dubai Hil
 const trustMetrics = [
   { value: '24h', label: 'First response on Dubai briefs' },
   { value: `${projects.length}+`, label: 'Projects across hospitality, villas, and workplace interiors' },
-  { value: 'BOQ-Ready', label: 'Drawing and execution package discipline', valueClassName: 'text-[clamp(2rem,2.8vw,3rem)]' },
+  { value: 'BOQ-Ready', label: 'Drawing and execution package discipline', valueClassName: 'text-[clamp(1.8rem,2.3vw,2.4rem)]' },
   {
     value: dubaiPhoneDisplay,
     label: 'Direct Dubai contact line',
-    valueClassName: 'whitespace-nowrap text-[clamp(1.85rem,2.3vw,2.65rem)] tracking-[-0.04em]',
+    valueClassName: 'whitespace-nowrap text-[clamp(1.35rem,1.7vw,1.7rem)] tracking-[-0.04em]',
   },
 ];
 
@@ -253,7 +253,7 @@ export default function DubaiPage() {
             {trustMetrics.map((metric, index) => (
               <Reveal key={metric.label} delay={index * 0.05} className='h-full'>
                 <article className='flex h-full min-h-[170px] flex-col justify-between rounded-[26px] border border-[#dcc6a3]/55 bg-white/90 p-5 shadow-[0_18px_48px_rgba(58,32,11,0.08)] backdrop-blur-md'>
-                  <p className={`text-3xl leading-none text-[#1a140d] sm:text-4xl ${metric.valueClassName ?? ''}`}>{metric.value}</p>
+                  <p className={`text-[clamp(2rem,2.4vw,2.55rem)] leading-none text-[#1a140d] ${metric.valueClassName ?? ''}`}>{metric.value}</p>
                   <p className='mt-3 text-[11px] uppercase tracking-[0.24em] text-[#8c7758]'>{metric.label}</p>
                 </article>
               </Reveal>
