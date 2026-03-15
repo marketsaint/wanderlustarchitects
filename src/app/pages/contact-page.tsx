@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Reveal, Input, SectionTitle, Textarea, Button } from '@/components/site/ui';
 
 const offices = [
-  { city: 'Jaipur', address: 'C-Scheme, Jaipur, Rajasthan', phone: '+91 98765 40001' },
-  { city: 'Surat', address: 'Athwa, Surat, Gujarat', phone: '+91 98765 40003' },
+  { city: 'Jaipur', address: 'C-Scheme, Jaipur, Rajasthan', phone: '+91 98284 85111' },
+  { city: 'Surat', address: 'Athwa, Surat, Gujarat', phone: '+91 98284 85111' },
   { city: 'Dubai', address: 'IBN Battuta - 11th Floor - Jabel Ali - Dubai - United Arab Emirates', phone: '+971 54 505 2126' },
 ];
 
@@ -127,7 +127,7 @@ export default function ContactPage() {
         </form>
       )}
 
-      <a href='https://wa.me/919999999999' className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'>
+      <a href='https://wa.me/919828485111' className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'>
         WhatsApp us
       </a>
     </div>
