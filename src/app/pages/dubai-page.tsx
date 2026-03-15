@@ -171,7 +171,7 @@ export default function DubaiPage() {
               </div>
 
               <div className='space-y-6'>
-                <h1 className='max-w-5xl text-5xl leading-[0.96] text-white sm:text-6xl lg:text-[5.35rem]'>
+                <h1 className='max-w-4xl text-4xl leading-[0.98] text-white sm:text-5xl lg:text-[4.55rem]'>
                   <span className='block'>Luxury Dubai interiors</span>
                   <span className='block'>with delivery clarity</span>
                   <span className='block'>and executive confidence.</span>
@@ -207,12 +207,12 @@ export default function DubaiPage() {
             <Reveal delay={0.12} className='lg:pl-6'>
               <div className='rounded-[30px] border border-white/12 bg-black/34 p-6 text-white shadow-[0_34px_90px_rgba(0,0,0,0.32)] backdrop-blur-xl'>
                 <div className='space-y-3 border-b border-white/12 pb-5'>
-                  <div className='max-w-[28rem]'>
+                  <div className='w-full max-w-none'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-[#f0d8b3]'>Dubai-ready positioning</p>
-                    <h2 className='mt-2 text-[clamp(1.32rem,1.55vw,1.68rem)] leading-[1.12] tracking-[-0.01em]'>
-                      <span className='block'>A premium interior partner for</span>
-                      <span className='block'>Dubai briefs that need</span>
-                      <span className='block'>presentation-ready confidence.</span>
+                    <h2 className='mt-2 text-[clamp(1.24rem,1.45vw,1.55rem)] leading-[1.12] tracking-[-0.01em]'>
+                      <span className='block'>A premium interior partner for Dubai briefs</span>
+                      <span className='block'>that need presentation-ready</span>
+                      <span className='block'>confidence.</span>
                     </h2>
                   </div>
                   <div className='w-full rounded-2xl border border-white/12 bg-white/8 px-6 py-5 text-left'>
