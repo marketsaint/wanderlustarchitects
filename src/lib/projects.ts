@@ -300,7 +300,7 @@ function inferCategory(projectType: string): ProjectCategory {
 function buildImagePath(imageName: string) {
   const folder = encodeURIComponent(imageName);
   const file = encodeURIComponent(`${imageName}.jpg`);
-  return `/projects/${folder}/${file}`;
+  return `/project-media/${folder}/${file}`;
 }
 
 function buildSlug(title: string) {
