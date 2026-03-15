@@ -25,8 +25,12 @@ const heroAreas = ['Palm Jumeirah', 'Downtown Dubai', 'Business Bay', 'Dubai Hil
 const trustMetrics = [
   { value: '24h', label: 'First response on Dubai briefs' },
   { value: `${projects.length}+`, label: 'Projects across hospitality, villas, and workplace interiors' },
-  { value: 'BOQ-Ready', label: 'Drawing and execution package discipline' },
-  { value: dubaiPhoneDisplay, label: 'Direct Dubai contact line' },
+  { value: 'BOQ-Ready', label: 'Drawing and execution package discipline', valueClassName: 'text-[clamp(2rem,2.8vw,3rem)]' },
+  {
+    value: dubaiPhoneDisplay,
+    label: 'Direct Dubai contact line',
+    valueClassName: 'whitespace-nowrap text-[clamp(1.85rem,2.3vw,2.65rem)] tracking-[-0.04em]',
+  },
 ];
 
 const dubaiAdvantages = [
@@ -168,7 +172,9 @@ export default function DubaiPage() {
 
               <div className='space-y-6'>
                 <h1 className='max-w-5xl text-5xl leading-[0.96] text-white sm:text-6xl lg:text-[5.35rem]'>
-                  Dubai interiors with luxury presence, delivery clarity, and boardroom-level confidence.
+                  <span className='block'>Luxury Dubai interiors</span>
+                  <span className='block'>with delivery clarity</span>
+                  <span className='block'>and executive confidence.</span>
                 </h1>
                 <p className='max-w-3xl text-base leading-8 text-[#e6d3bc] sm:text-lg'>
                   Wanderlust Architects designs villas, hospitality environments, branded workplaces, and premium interiors for clients who expect a
@@ -200,14 +206,14 @@ export default function DubaiPage() {
 
             <Reveal delay={0.12} className='lg:pl-6'>
               <div className='rounded-[30px] border border-white/12 bg-black/34 p-6 text-white shadow-[0_34px_90px_rgba(0,0,0,0.32)] backdrop-blur-xl'>
-                <div className='flex items-center justify-between gap-3 border-b border-white/12 pb-5'>
-                  <div>
+                <div className='flex flex-col gap-4 border-b border-white/12 pb-5 sm:flex-row sm:items-start sm:justify-between'>
+                  <div className='max-w-[28rem]'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-[#f0d8b3]'>Dubai-ready positioning</p>
                     <h2 className='mt-2 text-3xl leading-tight'>A premium interior partner that feels presentation-ready from day one.</h2>
                   </div>
-                  <div className='rounded-2xl border border-white/12 bg-white/8 px-4 py-3 text-right'>
+                  <div className='shrink-0 self-start rounded-2xl border border-white/12 bg-white/8 px-5 py-4 text-right sm:min-w-[220px]'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-white/55'>Call</p>
-                    <p className='mt-2 text-lg'>{dubaiPhoneDisplay}</p>
+                    <p className='mt-2 whitespace-nowrap text-[clamp(1.5rem,2vw,2rem)] tracking-[-0.03em]'>{dubaiPhoneDisplay}</p>
                   </div>
                 </div>
 
@@ -241,9 +247,9 @@ export default function DubaiPage() {
         <Container>
           <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-4'>
             {trustMetrics.map((metric, index) => (
-              <Reveal key={metric.label} delay={index * 0.05}>
-                <article className='rounded-[26px] border border-[#dcc6a3]/55 bg-white/90 p-5 shadow-[0_18px_48px_rgba(58,32,11,0.08)] backdrop-blur-md'>
-                  <p className='text-3xl leading-none text-[#1a140d] sm:text-4xl'>{metric.value}</p>
+              <Reveal key={metric.label} delay={index * 0.05} className='h-full'>
+                <article className='flex h-full min-h-[170px] flex-col justify-between rounded-[26px] border border-[#dcc6a3]/55 bg-white/90 p-5 shadow-[0_18px_48px_rgba(58,32,11,0.08)] backdrop-blur-md'>
+                  <p className={`text-3xl leading-none text-[#1a140d] sm:text-4xl ${metric.valueClassName ?? ''}`}>{metric.value}</p>
                   <p className='mt-3 text-[11px] uppercase tracking-[0.24em] text-[#8c7758]'>{metric.label}</p>
                 </article>
               </Reveal>
