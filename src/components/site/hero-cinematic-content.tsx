@@ -277,7 +277,7 @@ export function HeroCinematicContent({ contact, chips, headline }: HeroCinematic
         >
           <MagneticLink
             href={`tel:${contact.phone}`}
-            className='relative inline-flex cursor-pointer select-none items-center justify-center gap-2 overflow-hidden rounded-md border border-white bg-white px-6 py-3 text-xs uppercase tracking-[0.22em] text-black transition-[background-color,color,letter-spacing,box-shadow,filter] duration-300 ease-out hover:bg-transparent hover:text-white hover:tracking-[0.26em] hover:[box-shadow:0_20px_42px_rgba(0,0,0,0.62)] hover:[filter:brightness(1.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60'
+            className='relative inline-flex cursor-pointer select-none items-center justify-center gap-2 overflow-hidden rounded-md border border-white bg-white/95 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] !text-[#140d06] shadow-[0_14px_34px_rgba(0,0,0,0.18)] transition-[background-color,color,letter-spacing,box-shadow,filter] duration-300 ease-out hover:bg-[#120b05] hover:!text-white hover:tracking-[0.22em] hover:[box-shadow:0_20px_42px_rgba(0,0,0,0.62)] hover:[filter:brightness(1.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60'
           >
             Book Consultation
           </MagneticLink>
