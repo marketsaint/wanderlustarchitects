@@ -319,7 +319,6 @@ export default function DubaiPage() {
                       </div>
                       <div className='flex flex-1 flex-col gap-3 p-4 lg:p-4'>
                         <h3 className='text-2xl leading-tight text-[#17110b]'>{service.title}</h3>
-                        <p className='text-sm leading-6 text-[#5f5343]'>{service.copy}</p>
                         <div className='mt-auto space-y-1.5'>
                           {(serviceDeliverables[service.title] ?? []).map((item) => (
                             <div key={item} className='flex items-center gap-3 text-sm text-[#5b4c38]'>
