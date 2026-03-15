@@ -35,15 +35,17 @@ function BrandLogo({
   iconClassName,
   textClassName,
   iconSrc = '/branding/wanderlust_architects_logo-icon-Black.png',
+  iconImageClassName,
 }: {
   className?: string;
   iconClassName?: string;
   textClassName?: string;
   iconSrc?: string;
+  iconImageClassName?: string;
 }) {
   return (
     <span className={cn('inline-flex items-center gap-3', className)}>
-      <img src={iconSrc} alt='' aria-hidden='true' className={cn('h-12 w-auto object-contain', iconClassName)} />
+      <img src={iconSrc} alt='' aria-hidden='true' className={cn('h-12 w-auto object-contain', iconClassName, iconImageClassName)} />
       <span className={cn('font-[Montserrat] text-xs font-semibold uppercase tracking-[0.2em] text-black', textClassName)}>
         WANDERLUST ARCHITECTS
       </span>
@@ -105,6 +107,7 @@ function Header() {
   const headerRef = useRef<HTMLDivElement | null>(null);
 
   const isHomeOverlay = isHomePath(pathname);
+  const isDubaiPage = pathname.startsWith('/dubai');
   const useLightTheme = isHomeOverlay && isOverHero;
   const useWatchScrolledLayout = isHomeOverlay && !isOverHero;
 
@@ -189,12 +192,19 @@ function Header() {
           >
             <BrandLogo
               className='min-w-0 gap-1.5 sm:gap-2.5'
-              iconClassName='h-7 w-7 sm:h-8 sm:w-8 xl:h-9 xl:w-9'
+              iconClassName={cn('h-7 w-7 sm:h-8 sm:w-8 xl:h-9 xl:w-9', isDubaiPage && 'rounded-full')}
+              iconImageClassName={cn(isDubaiPage && useLightTheme && 'invert')}
               textClassName={cn(
                 'hidden truncate text-[8px] tracking-[0.08em] min-[420px]:inline sm:text-[10px] sm:tracking-[0.14em]',
                 useLightTheme && 'text-white',
               )}
-              iconSrc={useLightTheme ? '/branding/wanderlust_architects_logo-icon-White.png' : '/branding/wanderlust_architects_logo-icon-Black.png'}
+              iconSrc={
+                isDubaiPage
+                  ? '/branding/wanderlust-logo-icon.png'
+                  : useLightTheme
+                    ? '/branding/wanderlust_architects_logo-icon-White.png'
+                    : '/branding/wanderlust_architects_logo-icon-Black.png'
+              }
             />
           </Link>
 
