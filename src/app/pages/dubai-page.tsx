@@ -206,16 +206,18 @@ export default function DubaiPage() {
 
             <Reveal delay={0.12} className='lg:pl-6'>
               <div className='rounded-[30px] border border-white/12 bg-black/34 p-6 text-white shadow-[0_34px_90px_rgba(0,0,0,0.32)] backdrop-blur-xl'>
-                <div className='space-y-4 border-b border-white/12 pb-5'>
-                  <div className='max-w-[30rem]'>
+                <div className='grid gap-5 border-b border-white/12 pb-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end'>
+                  <div className='max-w-[28rem]'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-[#f0d8b3]'>Dubai-ready positioning</p>
-                    <h2 className='mt-2 max-w-[14ch] text-[clamp(2.2rem,3vw,3.15rem)] leading-[1.02]'>
-                      A premium interior partner that feels presentation-ready from day one.
+                    <h2 className='mt-2 text-[clamp(2.2rem,3vw,3.1rem)] leading-[1.02]'>
+                      <span className='block'>A premium interior partner</span>
+                      <span className='block'>for Dubai briefs that need</span>
+                      <span className='block'>presentation-ready confidence.</span>
                     </h2>
                   </div>
-                  <div className='ml-auto w-full max-w-[360px] rounded-2xl border border-white/12 bg-white/8 px-5 py-4 text-right'>
-                    <p className='text-[11px] uppercase tracking-[0.24em] text-white/55'>Call</p>
-                    <p className='mt-2 whitespace-nowrap text-[clamp(1.7rem,2.4vw,2.4rem)] tracking-[-0.03em]'>{dubaiPhoneDisplay}</p>
+                  <div className='w-full max-w-[300px] rounded-2xl border border-white/12 bg-white/8 px-5 py-4 text-left lg:justify-self-end'>
+                    <p className='text-[11px] uppercase tracking-[0.24em] text-white/55'>Direct Dubai line</p>
+                    <p className='mt-2 whitespace-nowrap text-[clamp(1.5rem,1.9vw,2rem)] tracking-[-0.03em]'>{dubaiPhoneDisplay}</p>
                   </div>
                 </div>
 
