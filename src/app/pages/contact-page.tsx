@@ -4,6 +4,7 @@ import { Reveal, Input, SectionTitle, Textarea, Button } from '@/components/site
 const offices = [
   { city: 'Jaipur', address: 'C-Scheme, Jaipur, Rajasthan', phone: '+91 98765 40001' },
   { city: 'Surat', address: 'Athwa, Surat, Gujarat', phone: '+91 98765 40003' },
+  { city: 'Dubai', address: 'IBN Battuta - 11th Floor - Jabel Ali - Dubai - United Arab Emirates', phone: '+971 54 505 2126' },
 ];
 
 const initialForm = {
@@ -59,10 +60,10 @@ export default function ContactPage() {
         </section>
       </Reveal>
 
-      <div className='grid gap-4 md:grid-cols-2'>
+      <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
         {offices.map((office, index) => (
           <Reveal key={office.city} delay={index * 0.05}>
-            <article className='rounded-xl border border-mist bg-white p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-ink'>
+            <article className='h-full rounded-xl border border-mist bg-white p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-ink'>
               <h3 className='text-2xl'>{office.city}</h3>
               <p className='mt-2 text-sm text-iron'>{office.address}</p>
               <a href={`tel:${office.phone.replace(/\s+/g, '')}`} className='mt-3 block text-xs uppercase tracking-[0.16em] text-iron hover:text-ink'>
