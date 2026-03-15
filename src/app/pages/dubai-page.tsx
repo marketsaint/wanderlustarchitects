@@ -26,12 +26,6 @@ const trustMetrics = [
   { value: '24h', label: 'First response on Dubai briefs' },
   { value: `${projects.length}+`, label: 'Projects across hospitality, villas, and workplace interiors' },
   { value: 'BOQ-Ready', label: 'Drawing and execution package discipline', valueClassName: 'text-[clamp(1.45rem,1.7vw,1.85rem)]' },
-  {
-    value: '+971 54 505',
-    valueLines: ['+971 54 505', '2126'],
-    label: 'Direct Dubai contact line',
-    valueClassName: 'text-[clamp(0.96rem,1.05vw,1.05rem)] leading-[1.02] tracking-[-0.02em]',
-  },
 ];
 
 const dubaiAdvantages = [
@@ -250,21 +244,11 @@ export default function DubaiPage() {
 
       <section className='relative z-20 -mt-8 pb-6 sm:-mt-12'>
         <Container>
-          <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-4'>
+          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
             {trustMetrics.map((metric, index) => (
               <Reveal key={metric.label} delay={index * 0.05} className='h-full'>
-                <article className='flex h-full min-h-[148px] flex-col justify-between rounded-[24px] border border-[#dcc6a3]/55 bg-white/90 p-4 shadow-[0_18px_48px_rgba(58,32,11,0.08)] backdrop-blur-md'>
-                  {metric.valueLines ? (
-                    <div className={`text-[clamp(1.45rem,1.65vw,1.7rem)] text-[#1a140d] ${metric.valueClassName ?? ''}`}>
-                      {metric.valueLines.map((line) => (
-                        <span key={line} className='block'>
-                          {line}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className={`text-[clamp(1.55rem,1.8vw,1.95rem)] leading-none text-[#1a140d] ${metric.valueClassName ?? ''}`}>{metric.value}</p>
-                  )}
+                <article className='flex h-full min-h-[124px] flex-col gap-5 rounded-[24px] border border-[#dcc6a3]/55 bg-white/90 p-4 shadow-[0_18px_48px_rgba(58,32,11,0.08)] backdrop-blur-md'>
+                  <p className={`text-[clamp(1.55rem,1.8vw,1.95rem)] leading-none text-[#1a140d] ${metric.valueClassName ?? ''}`}>{metric.value}</p>
                   <p className='mt-2 text-[10px] uppercase tracking-[0.18em] text-[#8c7758]'>{metric.label}</p>
                 </article>
               </Reveal>
