@@ -207,20 +207,17 @@ export default function DubaiPage() {
             <Reveal delay={0.12} className='lg:pl-6'>
               <div className='rounded-[30px] border border-white/12 bg-black/34 p-6 text-white shadow-[0_34px_90px_rgba(0,0,0,0.32)] backdrop-blur-xl'>
                 <div className='space-y-4 border-b border-white/12 pb-5'>
-                  <div className='max-w-[24rem]'>
+                  <div className='max-w-[22rem]'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-[#f0d8b3]'>Dubai-ready positioning</p>
-                    <h2 className='mt-2 text-[clamp(1.55rem,2vw,2.05rem)] leading-[1.08] tracking-[-0.015em]'>
+                    <h2 className='mt-2 text-[clamp(1.35rem,1.65vw,1.75rem)] leading-[1.12] tracking-[-0.01em]'>
                       <span className='block'>A premium interior partner</span>
                       <span className='block'>for Dubai briefs that need</span>
                       <span className='block'>presentation-ready confidence.</span>
                     </h2>
                   </div>
-                  <div className='w-full max-w-[240px] rounded-2xl border border-white/12 bg-white/8 px-5 py-4 text-left sm:ml-auto'>
+                  <div className='w-full max-w-[320px] rounded-2xl border border-white/12 bg-white/8 px-6 py-5 text-left sm:ml-auto'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-white/55'>Direct Dubai line</p>
-                    <div className='mt-3 text-[clamp(1.25rem,1.55vw,1.6rem)] leading-[1.12] tracking-[-0.02em] text-white'>
-                      <span className='block'>+971 54 505</span>
-                      <span className='block'>2126</span>
-                    </div>
+                    <p className='mt-3 whitespace-nowrap text-[clamp(1.6rem,2vw,2.1rem)] leading-none tracking-[-0.03em] text-white'>{dubaiPhoneDisplay}</p>
                   </div>
                 </div>
 
