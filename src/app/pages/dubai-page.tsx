@@ -339,9 +339,9 @@ export default function DubaiPage() {
             </div>
           </section>
 
-          <section className='grid gap-8 lg:grid-cols-[1.05fr_0.95fr]'>
-            <Reveal>
-              <div className='relative overflow-hidden rounded-[34px] border border-[#d5bc95]/45 bg-[#120b06] p-8 text-white shadow-[0_26px_72px_rgba(12,7,3,0.32)] lg:p-10'>
+          <section className='grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch'>
+            <Reveal className='h-full'>
+              <div className='relative h-full overflow-hidden rounded-[34px] border border-[#d5bc95]/45 bg-[#120b06] p-8 text-white shadow-[0_26px_72px_rgba(12,7,3,0.32)] lg:p-10'>
                 <div className='absolute inset-0 opacity-40 [background-image:radial-gradient(circle_at_18%_14%,rgba(230,194,139,0.28),transparent_22%),linear-gradient(140deg,rgba(255,255,255,0.08),transparent_48%)]' />
                 <div className='relative z-[1]'>
                   <SectionTitle
@@ -376,9 +376,9 @@ export default function DubaiPage() {
               </div>
             </Reveal>
 
-            <Reveal delay={0.08}>
-              <div className='overflow-hidden rounded-[34px] border border-[#dcc6a3]/55 bg-white shadow-[0_22px_60px_rgba(49,28,10,0.08)]'>
-                <div className='relative h-[420px] overflow-hidden'>
+            <Reveal delay={0.08} className='h-full'>
+              <div className='h-full overflow-hidden rounded-[34px] border border-[#dcc6a3]/55 bg-white shadow-[0_22px_60px_rgba(49,28,10,0.08)]'>
+                <div className='relative h-[420px] overflow-hidden lg:h-full lg:min-h-[540px]'>
                   <img src={siteImages.hero} alt='Luxury design visual by Wanderlust Architects' className='h-full w-full object-cover grayscale' />
                   <div className='absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent' />
                   <div className='absolute bottom-0 left-0 right-0 p-6 text-white'>
