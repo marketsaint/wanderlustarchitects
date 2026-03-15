@@ -206,7 +206,7 @@ export default function DubaiPage() {
 
             <Reveal delay={0.12} className='lg:pl-6'>
               <div className='rounded-[30px] border border-white/12 bg-black/34 p-6 text-white shadow-[0_34px_90px_rgba(0,0,0,0.32)] backdrop-blur-xl'>
-                <div className='space-y-4 border-b border-white/12 pb-5'>
+                <div className='space-y-3 border-b border-white/12 pb-5'>
                   <div className='max-w-[22rem]'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-[#f0d8b3]'>Dubai-ready positioning</p>
                     <h2 className='mt-2 text-[clamp(1.35rem,1.65vw,1.75rem)] leading-[1.12] tracking-[-0.01em]'>
@@ -215,7 +215,7 @@ export default function DubaiPage() {
                       <span className='block'>presentation-ready confidence.</span>
                     </h2>
                   </div>
-                  <div className='w-full max-w-[320px] rounded-2xl border border-white/12 bg-white/8 px-6 py-5 text-left sm:ml-auto'>
+                  <div className='w-full rounded-2xl border border-white/12 bg-white/8 px-6 py-5 text-left'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-white/55'>Direct Dubai line</p>
                     <p className='mt-3 whitespace-nowrap text-[clamp(1.6rem,2vw,2.1rem)] leading-none tracking-[-0.03em] text-white'>{dubaiPhoneDisplay}</p>
                   </div>
