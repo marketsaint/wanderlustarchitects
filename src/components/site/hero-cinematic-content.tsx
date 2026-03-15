@@ -283,7 +283,7 @@ export function HeroCinematicContent({ contact, chips, headline }: HeroCinematic
           </MagneticLink>
           <MagneticLink
             href={contact.whatsapp}
-            className='relative inline-flex cursor-pointer select-none items-center justify-center gap-2 overflow-hidden rounded-md border border-white/70 bg-transparent px-6 py-3 text-xs uppercase tracking-[0.22em] text-white transition-[border-color,background-color,color,letter-spacing,box-shadow,filter] duration-300 ease-out hover:border-white hover:bg-white hover:text-black hover:tracking-[0.26em] hover:[box-shadow:0_20px_42px_rgba(0,0,0,0.62)] hover:[filter:brightness(1.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60'
+            className='relative inline-flex cursor-pointer select-none items-center justify-center gap-2 overflow-hidden rounded-md border border-white/70 bg-transparent px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white transition-[border-color,background-color,color,letter-spacing,box-shadow,filter] duration-300 ease-out hover:border-white hover:bg-white hover:!text-[#120b05] hover:tracking-[0.22em] hover:[box-shadow:0_20px_42px_rgba(0,0,0,0.62)] hover:[filter:brightness(1.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60'
             target='_blank'
             rel='noreferrer'
           >
