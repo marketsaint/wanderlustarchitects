@@ -1,0 +1,7 @@
+node_modules
+dist
+guidelines
+projects
+devserver.log
+devserver.err
+.git
