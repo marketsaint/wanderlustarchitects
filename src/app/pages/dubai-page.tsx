@@ -206,14 +206,16 @@ export default function DubaiPage() {
 
             <Reveal delay={0.12} className='lg:pl-6'>
               <div className='rounded-[30px] border border-white/12 bg-black/34 p-6 text-white shadow-[0_34px_90px_rgba(0,0,0,0.32)] backdrop-blur-xl'>
-                <div className='flex flex-col gap-4 border-b border-white/12 pb-5 sm:flex-row sm:items-start sm:justify-between'>
-                  <div className='max-w-[28rem]'>
+                <div className='space-y-4 border-b border-white/12 pb-5'>
+                  <div className='max-w-[30rem]'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-[#f0d8b3]'>Dubai-ready positioning</p>
-                    <h2 className='mt-2 text-3xl leading-tight'>A premium interior partner that feels presentation-ready from day one.</h2>
+                    <h2 className='mt-2 max-w-[14ch] text-[clamp(2.2rem,3vw,3.15rem)] leading-[1.02]'>
+                      A premium interior partner that feels presentation-ready from day one.
+                    </h2>
                   </div>
-                  <div className='shrink-0 self-start rounded-2xl border border-white/12 bg-white/8 px-5 py-4 text-right sm:min-w-[220px]'>
+                  <div className='ml-auto w-full max-w-[360px] rounded-2xl border border-white/12 bg-white/8 px-5 py-4 text-right'>
                     <p className='text-[11px] uppercase tracking-[0.24em] text-white/55'>Call</p>
-                    <p className='mt-2 whitespace-nowrap text-[clamp(1.5rem,2vw,2rem)] tracking-[-0.03em]'>{dubaiPhoneDisplay}</p>
+                    <p className='mt-2 whitespace-nowrap text-[clamp(1.7rem,2.4vw,2.4rem)] tracking-[-0.03em]'>{dubaiPhoneDisplay}</p>
                   </div>
                 </div>
 
