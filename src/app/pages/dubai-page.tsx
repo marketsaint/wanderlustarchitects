@@ -25,11 +25,12 @@ const heroAreas = ['Palm Jumeirah', 'Downtown Dubai', 'Business Bay', 'Dubai Hil
 const trustMetrics = [
   { value: '24h', label: 'First response on Dubai briefs' },
   { value: `${projects.length}+`, label: 'Projects across hospitality, villas, and workplace interiors' },
-  { value: 'BOQ-Ready', label: 'Drawing and execution package discipline', valueClassName: 'text-[clamp(1.8rem,2.3vw,2.4rem)]' },
+  { value: 'BOQ-Ready', label: 'Drawing and execution package discipline', valueClassName: 'text-[clamp(1.65rem,2vw,2.15rem)]' },
   {
-    value: dubaiPhoneDisplay,
+    value: '+971 54 505',
+    valueLines: ['+971 54 505', '2126'],
     label: 'Direct Dubai contact line',
-    valueClassName: 'whitespace-nowrap text-[clamp(1.35rem,1.7vw,1.7rem)] tracking-[-0.04em]',
+    valueClassName: 'text-[clamp(1.1rem,1.3vw,1.3rem)] leading-[1.05] tracking-[-0.03em]',
   },
 ];
 
@@ -253,7 +254,17 @@ export default function DubaiPage() {
             {trustMetrics.map((metric, index) => (
               <Reveal key={metric.label} delay={index * 0.05} className='h-full'>
                 <article className='flex h-full min-h-[170px] flex-col justify-between rounded-[26px] border border-[#dcc6a3]/55 bg-white/90 p-5 shadow-[0_18px_48px_rgba(58,32,11,0.08)] backdrop-blur-md'>
-                  <p className={`text-[clamp(2rem,2.4vw,2.55rem)] leading-none text-[#1a140d] ${metric.valueClassName ?? ''}`}>{metric.value}</p>
+                  {metric.valueLines ? (
+                    <div className={`text-[clamp(1.8rem,2vw,2.2rem)] text-[#1a140d] ${metric.valueClassName ?? ''}`}>
+                      {metric.valueLines.map((line) => (
+                        <span key={line} className='block'>
+                          {line}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className={`text-[clamp(1.85rem,2.15vw,2.3rem)] leading-none text-[#1a140d] ${metric.valueClassName ?? ''}`}>{metric.value}</p>
+                  )}
                   <p className='mt-3 text-[11px] uppercase tracking-[0.24em] text-[#8c7758]'>{metric.label}</p>
                 </article>
               </Reveal>
