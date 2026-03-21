@@ -1,4 +1,5 @@
 import { projectCategories, projects, type ProjectFilter, type ProjectRecord } from './projects';
+import { readPersistedRegion } from './site-region';
 
 export type SiteRegion = 'IN' | 'AE';
 
@@ -298,7 +299,15 @@ export const blogEntries: SiteBlogEntry[] = [
 ];
 
 export function getRegionFromPathname(pathname: string): SiteRegion {
-  return pathname.startsWith('/dubai') ? 'AE' : 'IN';
+  if (pathname.startsWith('/dubai')) {
+    return 'AE';
+  }
+
+  if (pathname.startsWith('/india')) {
+    return 'IN';
+  }
+
+  return readPersistedRegion() === 'dubai' ? 'AE' : 'IN';
 }
 
 function normalizePhone(raw: string) {

@@ -7,6 +7,7 @@ import BlogDetailPage from './pages/blog-detail-page';
 import CareerPage from './pages/career-page';
 import ContactPage from './pages/contact-page';
 import DubaiPage from './pages/dubai-page';
+import RegionEntryPage from './pages/region-entry-page';
 import ProjectsPage from './pages/projects-page';
 import ProjectDetailPage from './pages/project-detail-page';
 import NotFoundPage from './pages/not-found-page';
@@ -14,12 +15,12 @@ import NotFoundPage from './pages/not-found-page';
 export const router = createBrowserRouter([
   {
     path: '/',
+    Component: RegionEntryPage,
+  },
+  {
+    path: '/',
     Component: SiteLayout,
     children: [
-      {
-        index: true,
-        element: <Navigate to='/projects' replace />,
-      },
       {
         path: 'india',
         Component: HomePage,
@@ -67,11 +68,11 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/projects/:slug',
+    path: 'projects/:slug',
     Component: ProjectDetailPage,
   },
   {
-    path: '/project/:slug',
+    path: 'project/:slug',
     Component: ProjectDetailPage,
   },
 ]);

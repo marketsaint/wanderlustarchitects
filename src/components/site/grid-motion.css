@@ -60,14 +60,14 @@
   inset: 0;
   background-size: cover;
   background-position: 50% 50%;
-  filter: saturate(1.08) contrast(1.02) brightness(1.02);
+  filter: grayscale(1) saturate(0) contrast(1.06) brightness(0.92);
   opacity: 1;
 }
 
 .wa-gridmotion__item-img-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
   pointer-events: none;
 }
 

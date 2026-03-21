@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
-import { ProjectRecord } from '../../lib/projects';
+import { type ProjectRecord } from '@/lib/projects';
 
 interface ProjectGalleryDetailPanelProps {
   project: ProjectRecord;
@@ -11,74 +11,56 @@ export function ProjectGalleryDetailPanel({
   project,
   onOpenCaseStudy,
 }: ProjectGalleryDetailPanelProps) {
-  const hasLongTitle = project.title.length > 24;
-  const hasVeryLongTitle = project.title.length > 34;
-
   return (
     <motion.div
       layout
-      className="flex h-full min-h-0 flex-col overflow-hidden border border-[#ddd6ca] bg-[#fbf8f2] p-5 sm:p-6 lg:p-6 xl:p-7"
+      className='pointer-events-auto w-full border border-[#d9d9d9] bg-white p-4 shadow-[0_28px_70px_-52px_rgba(0,0,0,0.32)] sm:p-5'
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode='wait'>
         <motion.div
           key={project.id}
-          className="flex h-full min-h-0 flex-col"
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -16 }}
-          transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          className='grid gap-4 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] xl:items-stretch'
         >
-          <p
-            className="text-[10px] uppercase tracking-[0.34em] text-[#8f8576]"
-            style={{ fontFamily: 'var(--font-sans)' }}
-          >
-            Selected Project
-          </p>
+          <div className='border border-[#d9d9d9] bg-white p-4 sm:p-4'>
+            <div className='h-full min-h-[18rem] overflow-hidden border border-[#dcdcdc] bg-white xl:min-h-[25rem]'>
+              <img src={project.image} alt={project.title} className='h-full w-full object-cover grayscale' />
+            </div>
+          </div>
 
-          <h2
-            className="mt-4 overflow-hidden whitespace-nowrap pr-2 text-ellipsis text-[#2d2923] leading-[1] tracking-[-0.035em]"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: hasVeryLongTitle
-                ? 'clamp(1.35rem, 1.55vw, 1.95rem)'
-                : hasLongTitle
-                  ? 'clamp(1.55rem, 1.8vw, 2.25rem)'
-                  : 'clamp(1.85rem, 2.2vw, 2.8rem)',
-            }}
-          >
-            {project.title}
-          </h2>
+          <div className='flex flex-col justify-between border border-[#d9d9d9] bg-white p-6 sm:p-8'>
+            <div className='space-y-6'>
+              <div>
+                <p className='text-[10px] uppercase tracking-[0.3em] text-black/55'>Selected Project</p>
+                <h2 className='mt-5 max-w-[14ch] text-[2rem] leading-[0.96] text-black sm:text-[2.55rem]'>{project.title}</h2>
+              </div>
 
-          <p
-            className="mt-4 text-[0.98rem] text-[#655c50]"
-            style={{ fontFamily: 'var(--font-sans)' }}
-          >
-            {project.location}
-          </p>
+              <div className='space-y-3 text-black/72'>
+                <p className='text-[1.05rem] leading-8'>{project.location}</p>
+                <p className='text-[1.05rem] leading-8'>
+                  {project.area} | Completed {project.year}
+                </p>
+              </div>
 
-          <p
-            className="mt-2 text-[0.98rem] text-[#7b7165]"
-            style={{ fontFamily: 'var(--font-sans)' }}
-          >
-            {project.area} | Completed {project.year}
-          </p>
+              <p className='max-w-[34ch] text-[1.05rem] leading-9 text-black/68'>{project.description}</p>
+            </div>
 
-          <p
-            className="mt-5 max-w-[36rem] text-[0.96rem] leading-[1.72] text-[#544c42]"
-            style={{ fontFamily: 'var(--font-sans)' }}
-          >
-            {project.description}
-          </p>
-
-          <button
-            type="button"
-            onClick={() => onOpenCaseStudy(project)}
-            className="mt-auto inline-flex shrink-0 self-start whitespace-nowrap border border-[#d0c7ba] bg-white px-4 py-2.5 text-[0.92rem] text-[#4f473d] transition-all hover:border-[#bfb4a2] hover:bg-[#f7f2ea]"
-            style={{ fontFamily: 'var(--font-sans)' }}
-          >
-            <span>View Full Case Study</span>
-            <ArrowRight size={16} />
-          </button>
+            <button
+              type='button'
+              onClick={() => onOpenCaseStudy(project)}
+              data-no-canvas-drag='true'
+              className='mt-8 inline-flex items-center gap-2 self-start border border-[#d2d2d2] bg-white px-5 py-4 text-[11px] uppercase tracking-[0.22em] text-black transition hover:border-[#111111] hover:bg-white'
+            >
+              <span>View Full Case Study</span>
+              <ArrowRight size={15} />
+            </button>
+          </div>
         </motion.div>
       </AnimatePresence>
     </motion.div>

@@ -1,37 +1,280 @@
-import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
-import { type CSSProperties, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type WheelEvent as ReactWheelEvent } from 'react';
+import { LayoutGroup, motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 import { ProjectGalleryCard } from './project-gallery-card';
 import { ProjectGalleryDetailPanel } from './project-gallery-detail-panel';
-import { ProjectRecord, projects } from '../../lib/projects';
+import { projects } from '../../lib/projects';
 
-const DESKTOP_COLUMNS = 5;
+const GRID_COLUMNS = 5;
+const CARD_SIZE = 220;
+const GAP = 18;
+const VIEWPORT_PADDING = 22;
+const MAX_ZOOM_COLUMNS = 3;
+const PANEL_FALLBACK_HEIGHT = 280;
 
-type DesktopGalleryRow =
-  | { kind: 'cards'; projects: ProjectRecord[] }
-  | { kind: 'expanded'; project: ProjectRecord };
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
 
-function chunkProjects(items: ProjectRecord[], size: number) {
-  const rows: ProjectRecord[][] = [];
+function lerp(start: number, end: number, progress: number) {
+  return start + (end - start) * progress;
+}
 
-  for (let index = 0; index < items.length; index += size) {
-    rows.push(items.slice(index, index + size));
+function getOverviewLayout(projectCount: number, width: number, height: number) {
+  let best = {
+    columns: MAX_ZOOM_COLUMNS,
+    cardSize: 120,
+  };
+
+  for (let columns = MAX_ZOOM_COLUMNS; columns <= projectCount; columns += 1) {
+    const rows = Math.ceil(projectCount / columns);
+    const widthSize = (width - GAP * (columns - 1)) / columns;
+    const heightSize = (height - GAP * (rows - 1)) / rows;
+    const cardSize = Math.floor(Math.min(widthSize, heightSize));
+
+    if (cardSize > best.cardSize) {
+      best = { columns, cardSize };
+    }
   }
 
-  return rows;
+  return best;
 }
 
 export function ProjectGallerySection() {
   const navigate = useNavigate();
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const detailPanelRef = useRef<HTMLDivElement | null>(null);
+  const dragMovedRef = useRef(false);
+  const suppressClickRef = useRef(false);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
+  const [availableHeight, setAvailableHeight] = useState(0);
+  const [zoomProgress, setZoomProgress] = useState(0);
+  const [offsetX, setOffsetX] = useState(0);
+  const [offsetY, setOffsetY] = useState(0);
+  const [panelHeight, setPanelHeight] = useState(PANEL_FALLBACK_HEIGHT);
+  const [shouldAutoCenter, setShouldAutoCenter] = useState(false);
+  const [dragState, setDragState] = useState<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+  } | null>(null);
 
-  const selectedProject =
-    projects.find((project) => project.id === selectedProjectId) ?? null;
+  const contentWidth = Math.max(0, viewportSize.width - VIEWPORT_PADDING * 2);
+  const contentHeightLimit = Math.max(0, viewportSize.height - VIEWPORT_PADDING * 2);
+  const overviewLayout = useMemo(() => {
+    if (!contentWidth || !contentHeightLimit) {
+      return { columns: GRID_COLUMNS, cardSize: CARD_SIZE };
+    }
+
+    return getOverviewLayout(projects.length, contentWidth, contentHeightLimit);
+  }, [contentHeightLimit, contentWidth]);
+
+  const targetCardSize = useMemo(() => {
+    if (!contentWidth) {
+      return CARD_SIZE;
+    }
+
+    const maxCardSize = (contentWidth - GAP * (MAX_ZOOM_COLUMNS - 1)) / MAX_ZOOM_COLUMNS;
+    return lerp(overviewLayout.cardSize, maxCardSize, zoomProgress);
+  }, [contentWidth, overviewLayout.cardSize, zoomProgress]);
+
+  const derivedColumns = useMemo(() => {
+    if (!contentWidth) {
+      return GRID_COLUMNS;
+    }
+
+    return clamp(Math.floor((contentWidth + GAP) / (targetCardSize + GAP)), MAX_ZOOM_COLUMNS, projects.length);
+  }, [contentWidth, targetCardSize]);
+
+  const columns = derivedColumns;
+  const cardSize = useMemo(() => {
+    if (!contentWidth || columns <= 0) {
+      return CARD_SIZE;
+    }
+
+    return Math.floor((contentWidth - GAP * (columns - 1)) / columns);
+  }, [columns, contentWidth]);
+
+  const selectedProject = projects.find((project) => project.id === selectedProjectId) ?? null;
+  const zoomPercent = Math.round((cardSize / Math.max(overviewLayout.cardSize, 1)) * 100);
+
+  const selectedIndex = useMemo(() => {
+    return selectedProjectId ? projects.findIndex((project) => project.id === selectedProjectId) : -1;
+  }, [selectedProjectId]);
+
+  const selectedRow = selectedIndex >= 0 ? Math.floor(selectedIndex / columns) : -1;
+  const totalColumns = Math.min(columns, projects.length);
+  const baseRows = Math.ceil(projects.length / columns);
+  const contentWidthTotal = totalColumns * cardSize + Math.max(0, totalColumns - 1) * GAP;
+  const contentHeight = baseRows * cardSize + Math.max(0, baseRows - 1) * GAP + (selectedProject ? panelHeight + GAP : 0);
+  const maxPanX = Math.max(0, contentWidthTotal - contentWidth);
+  const maxPanY = Math.max(0, contentHeight - contentHeightLimit);
+  const isCanvasPannable = maxPanX > 0 || maxPanY > 0;
+  const canvasItems = useMemo(() => {
+    const items: Array<{ kind: 'project'; projectId: number } | { kind: 'panel'; projectId: number }> = [];
+
+    projects.forEach((project, index) => {
+      items.push({ kind: 'project', projectId: project.id });
+
+      const currentRow = Math.floor(index / columns);
+      const isRowEnd = index === projects.length - 1 || (index + 1) % columns === 0;
+      const shouldInsertPanel = selectedProject && currentRow === selectedRow && isRowEnd;
+
+      if (shouldInsertPanel) {
+        items.push({ kind: 'panel', projectId: project.id });
+      }
+    });
+
+    return items;
+  }, [columns, selectedProject, selectedRow]);
+
+  const clampOffsetX = (nextOffsetX: number) => clamp(nextOffsetX, -maxPanX, 0);
+  const clampOffsetY = (nextOffsetY: number) => clamp(nextOffsetY, -maxPanY, 0);
+  const getAutoPanOffsets = (clientX: number, clientY: number) => {
+    if (!viewportRef.current) {
+      return { x: 0, y: 0 };
+    }
+
+    const rect = viewportRef.current.getBoundingClientRect();
+    const normalizedX = clamp((clientX - rect.left) / Math.max(rect.width, 1), 0, 1);
+    const normalizedY = clamp((clientY - rect.top) / Math.max(rect.height, 1), 0, 1);
+
+    return {
+      x: clampOffsetX(-maxPanX * normalizedX),
+      y: clampOffsetY(-maxPanY * normalizedY),
+    };
+  };
+
+  useEffect(() => {
+    if (!viewportSize.width || !viewportSize.height) {
+      return;
+    }
+
+    if (!selectedProjectId) {
+      setOffsetX(0);
+      setOffsetY(0);
+    } else {
+      setOffsetX((current) => clampOffsetX(current));
+      setOffsetY((current) => clampOffsetY(current));
+    }
+  }, [contentHeightLimit, maxPanX, maxPanY, selectedProjectId, viewportSize.height, viewportSize.width]);
+
+  useEffect(() => {
+    if (!selectedProject || !detailPanelRef.current) {
+      return;
+    }
+
+    const updateHeight = () => {
+      if (detailPanelRef.current) {
+        setPanelHeight(detailPanelRef.current.offsetHeight);
+      }
+    };
+
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(detailPanelRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [selectedProject]);
+
+  useEffect(() => {
+    const updateSizes = () => {
+      setAvailableHeight(window.innerHeight);
+
+      if (viewportRef.current) {
+        setViewportSize({
+          width: viewportRef.current.clientWidth,
+          height: viewportRef.current.clientHeight,
+        });
+      }
+    };
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    updateSizes();
+
+    window.addEventListener('resize', updateSizes);
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      window.removeEventListener('resize', updateSizes);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!selectedProjectId || !detailPanelRef.current) {
+      return;
+    }
+
+    if (!shouldAutoCenter && panelHeight === PANEL_FALLBACK_HEIGHT) {
+      return;
+    }
+
+    const rowTop = selectedRow * (cardSize + GAP);
+    const groupHeight = cardSize + GAP + panelHeight;
+    const centeredOffset = contentHeightLimit / 2 - (rowTop + groupHeight / 2);
+    setOffsetX(clampOffsetX(0));
+    setOffsetY(clampOffsetY(centeredOffset));
+
+    if (shouldAutoCenter) {
+      setShouldAutoCenter(false);
+    }
+  }, [cardSize, contentHeightLimit, maxPanX, panelHeight, selectedProjectId, selectedRow, shouldAutoCenter]);
+
+  const resetOverview = () => {
+    setSelectedProjectId(null);
+    setZoomProgress(0);
+    setOffsetX(0);
+    setOffsetY(0);
+    setShouldAutoCenter(false);
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('input, textarea, select, [contenteditable="true"]')) {
+        return;
+      }
+
       if (event.key === 'Escape') {
-        setSelectedProjectId(null);
+        resetOverview();
+        return;
+      }
+
+      const panStep = Math.max(96, Math.round(cardSize * 0.45));
+      let handled = false;
+
+      if (event.key === 'ArrowUp' && maxPanY > 0) {
+        setOffsetY((current) => clampOffsetY(current + panStep));
+        handled = true;
+      }
+
+      if (event.key === 'ArrowDown' && maxPanY > 0) {
+        setOffsetY((current) => clampOffsetY(current - panStep));
+        handled = true;
+      }
+
+      if (event.key === 'ArrowLeft' && maxPanX > 0) {
+        setOffsetX((current) => clampOffsetX(current + panStep));
+        handled = true;
+      }
+
+      if (event.key === 'ArrowRight' && maxPanX > 0) {
+        setOffsetX((current) => clampOffsetX(current - panStep));
+        handled = true;
+      }
+
+      if (handled) {
+        event.preventDefault();
       }
     };
 
@@ -40,195 +283,187 @@ export function ProjectGallerySection() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [cardSize, maxPanX, maxPanY]);
 
-  const desktopRows = useMemo<DesktopGalleryRow[]>(() => {
-    if (!selectedProject) {
-      return chunkProjects(projects, DESKTOP_COLUMNS).map((rowProjects) => ({
-        kind: 'cards' as const,
-        projects: rowProjects,
-      }));
+  const handleSelectProject = (projectId: number) => {
+    if (selectedProjectId === projectId) {
+      resetOverview();
+      return;
     }
 
-    const selectedIndex = projects.findIndex((project) => project.id === selectedProject.id);
-    const selectedRowStart =
-      Math.floor(selectedIndex / DESKTOP_COLUMNS) * DESKTOP_COLUMNS;
-    const beforeRows = chunkProjects(
-      projects.slice(0, selectedRowStart),
-      DESKTOP_COLUMNS
-    ).map((rowProjects) => ({ kind: 'cards' as const, projects: rowProjects }));
-    const afterRows = chunkProjects(
-      [
-        ...projects.slice(selectedRowStart, selectedIndex),
-        ...projects.slice(selectedIndex + 1),
-      ],
-      DESKTOP_COLUMNS
-    ).map((rowProjects) => ({ kind: 'cards' as const, projects: rowProjects }));
+    setSelectedProjectId(projectId);
+    setShouldAutoCenter(true);
+  };
 
-    return [
-      ...beforeRows,
-      { kind: 'expanded', project: selectedProject },
-      ...afterRows,
-    ];
-  }, [selectedProject]);
+  const handleWheel = (event: ReactWheelEvent<HTMLDivElement>) => {
+    event.preventDefault();
 
-  const handleProjectSelect = (projectId: number) => {
-    setSelectedProjectId((currentProjectId) =>
-      currentProjectId === projectId ? null : projectId
-    );
+    if (selectedProjectId) {
+      return;
+    }
+
+    setZoomProgress((current) => clamp(current - event.deltaY * 0.0014, 0, 1));
+  };
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'mouse') {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+
+    if (target.closest('[data-no-canvas-drag="true"], a, input, textarea, select')) {
+      return;
+    }
+
+    if (!isCanvasPannable) {
+      return;
+    }
+
+    if (contentHeight <= contentHeightLimit + 1) {
+      return;
+    }
+
+    dragMovedRef.current = false;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setDragState({
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: offsetX,
+      originY: offsetY,
+    });
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'mouse' && isCanvasPannable) {
+      const nextOffsets = getAutoPanOffsets(event.clientX, event.clientY);
+      setOffsetX(nextOffsets.x);
+      setOffsetY(nextOffsets.y);
+      return;
+    }
+
+    if (!dragState || dragState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const deltaX = event.clientX - dragState.startX;
+    const deltaY = event.clientY - dragState.startY;
+
+    if (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4) {
+      dragMovedRef.current = true;
+    }
+
+    setOffsetX(clampOffsetX(dragState.originX + deltaX));
+    setOffsetY(clampOffsetY(dragState.originY + deltaY));
+  };
+
+  const handlePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (dragState?.pointerId === event.pointerId) {
+      if (dragMovedRef.current) {
+        suppressClickRef.current = true;
+        window.setTimeout(() => {
+          suppressClickRef.current = false;
+        }, 0);
+      }
+
+      dragMovedRef.current = false;
+      setDragState(null);
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  const handleClickCapture = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!suppressClickRef.current) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    suppressClickRef.current = false;
   };
 
   return (
-    <section className="relative overflow-hidden bg-[#f7f3ec] py-12 sm:py-14 lg:py-16">
+    <section
+      className='relative overflow-hidden bg-white'
+      style={{ height: availableHeight ? `${availableHeight}px` : '100svh' }}
+    >
       <div
-        className="pointer-events-none absolute inset-0 opacity-80"
+        className='pointer-events-none absolute inset-0 opacity-60'
         style={{
           backgroundImage: `
-            linear-gradient(rgba(210, 204, 194, 0.38) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(210, 204, 194, 0.38) 1px, transparent 1px)
+            linear-gradient(rgba(222, 222, 222, 0.62) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(222, 222, 222, 0.62) 1px, transparent 1px)
           `,
           backgroundSize: '96px 96px',
         }}
       />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(circle at top, rgba(255,255,255,0.92), transparent 36%), linear-gradient(180deg, rgba(255,255,255,0.56) 0%, rgba(247,243,236,0.96) 34%, rgba(247,243,236,1) 100%)',
-        }}
-      />
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.96),transparent_36%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]' />
 
-      <div className="relative mx-auto max-w-[1640px] px-5 sm:px-6 lg:px-8 xl:px-10">
-        <div className="mb-7 flex items-center justify-between gap-4 lg:mb-8">
-          <div>
-            <p
-              className="text-[10px] uppercase tracking-[0.34em] text-[#8c826f]"
-              style={{ fontFamily: 'var(--font-sans)' }}
-            >
-              Curated Project Gallery
-            </p>
-          </div>
-          <p
-            className="text-[10px] uppercase tracking-[0.28em] text-[#9d9384]"
-            style={{ fontFamily: 'var(--font-sans)' }}
+      <div className='relative flex h-full flex-col'>
+        <div
+          ref={viewportRef}
+          className='relative h-full overflow-hidden bg-white'
+          onClickCapture={handleClickCapture}
+          onWheel={handleWheel}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          style={{ touchAction: 'none', cursor: isCanvasPannable ? (dragState ? 'grabbing' : 'move') : 'default' }}
+        >
+          <motion.div
+            className='absolute inset-x-0 top-0 px-4 py-4 sm:px-5 sm:py-5 lg:px-6 lg:py-6'
+            animate={{ x: offsetX, y: offsetY }}
+            transition={{ type: 'spring', stiffness: dragState ? 500 : 240, damping: dragState ? 44 : 30, mass: 0.45 }}
           >
-            {selectedProject
-              ? `${selectedProject.title}`
-              : `${String(projects.length).padStart(2, '0')} Projects`}
-          </p>
-        </div>
-
-        <LayoutGroup id="wanderlust-project-gallery">
-          <div className="grid gap-5 lg:hidden">
-            <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
-              {projects.map((project) => (
-                <motion.div
-                  layout
-                  key={project.id}
-                  className="aspect-[5/4]"
-                  transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <ProjectGalleryCard
-                    project={project}
-                    isActive={project.id === selectedProject?.id}
-                    onSelect={() => handleProjectSelect(project.id)}
-                  />
-                </motion.div>
-              ))}
-            </div>
-
-            <AnimatePresence initial={false}>
-              {selectedProject && (
-                <motion.div
-                  layout
-                  key={selectedProject.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <ProjectGalleryDetailPanel
-                    project={selectedProject}
-                    onOpenCaseStudy={(project) => navigate(`/projects/${project.slug}`)}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <div
-            className="hidden gap-5 lg:flex lg:flex-col"
-            style={
-              {
-                '--gallery-row-size': 'clamp(150px, 16vh, 196px)',
-              } as CSSProperties
-            }
-          >
-            {desktopRows.map((row, rowIndex) => {
-              if (row.kind === 'cards') {
-                return (
-                  <motion.div
-                    layout
-                    key={`cards-row-${rowIndex}-${row.projects.map((project) => project.id).join('-')}`}
-                    className="grid grid-cols-10 gap-5"
-                    transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    {row.projects.map((project) => (
+            <LayoutGroup id='wanderlust-project-canvas'>
+              <div
+                className='grid gap-[18px]'
+                style={{
+                  gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+                }}
+              >
+                {canvasItems.map((item) => {
+                  if (item.kind === 'panel' && selectedProject) {
+                    return (
                       <motion.div
+                        key={`panel-${item.projectId}`}
                         layout
-                        key={`project-${project.id}`}
-                        className="col-span-2 min-h-0"
-                        style={{ height: 'var(--gallery-row-size)' }}
-                        transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+                        ref={detailPanelRef}
+                        className='col-span-full'
+                        initial={{ opacity: 0, y: 18 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -12 }}
+                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                       >
-                        <ProjectGalleryCard
-                          project={project}
-                          isActive={false}
-                          onSelect={() => handleProjectSelect(project.id)}
+                        <ProjectGalleryDetailPanel
+                          project={selectedProject}
+                          onOpenCaseStudy={(entry) => navigate(`/projects/${entry.slug}`)}
                         />
                       </motion.div>
-                    ))}
-                  </motion.div>
-                );
-              }
+                    );
+                  }
 
-              return (
-                <motion.div
-                  layout
-                  key={`expanded-row-${row.project.id}`}
-                  className="grid grid-cols-10 gap-5"
-                  transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <motion.div
-                    layout
-                    className="col-span-5 min-h-0"
-                    style={{ height: 'calc(var(--gallery-row-size) * 2 + 2.5rem)' }}
-                    transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <ProjectGalleryCard
-                      project={row.project}
-                      isActive
-                      variant="featured"
-                      onSelect={() => handleProjectSelect(row.project.id)}
-                    />
-                  </motion.div>
+                  const project = projects.find((entry) => entry.id === item.projectId);
+                  if (!project) {
+                    return null;
+                  }
 
-                  <motion.div
-                    layout
-                    className="col-span-5 min-h-0"
-                    style={{ height: 'calc(var(--gallery-row-size) * 2 + 2.5rem)' }}
-                    transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <ProjectGalleryDetailPanel
-                      project={row.project}
-                      onOpenCaseStudy={(project) => navigate(`/projects/${project.slug}`)}
-                    />
-                  </motion.div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </LayoutGroup>
+                  return (
+                    <motion.div key={project.id} layout className='aspect-square'>
+                      <ProjectGalleryCard
+                        project={project}
+                        isActive={project.id === selectedProjectId}
+                        onSelect={() => handleSelectProject(project.id)}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </LayoutGroup>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

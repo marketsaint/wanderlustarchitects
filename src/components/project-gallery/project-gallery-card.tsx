@@ -1,64 +1,42 @@
 import { motion } from 'motion/react';
-import { ProjectRecord } from '../../lib/projects';
+import { cn } from '@/app/components/ui/utils';
+import { type ProjectRecord } from '@/lib/projects';
 
 interface ProjectGalleryCardProps {
   project: ProjectRecord;
   isActive: boolean;
-  variant?: 'compact' | 'featured';
   onSelect: () => void;
 }
 
-export function ProjectGalleryCard({
-  project,
-  isActive,
-  variant = 'compact',
-  onSelect,
-}: ProjectGalleryCardProps) {
-  const isFeatured = variant === 'featured';
-
+export function ProjectGalleryCard({ project, isActive, onSelect }: ProjectGalleryCardProps) {
   return (
     <motion.button
-      layout
-      type="button"
-      aria-label={`Open details for ${project.title}`}
+      type='button'
+      aria-label={`Select ${project.title}`}
       aria-pressed={isActive}
       onClick={onSelect}
-      className={`group relative h-full w-full overflow-hidden border bg-[#fbf8f2] text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bfb4a2] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f3ec] ${
-        isActive
-          ? 'border-[#bfb4a2] bg-[#fcfaf6]'
-          : 'border-[#ddd6ca] hover:border-[#c8bdad]'
-      }`}
-      whileHover={{ y: isFeatured ? 0 : -1.5 }}
-      transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      className={cn(
+        'group relative aspect-square w-full overflow-hidden border border-[#dddddd] bg-white p-3 text-left transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2 focus-visible:ring-offset-white',
+        isActive ? 'border-[#111111] shadow-[0_20px_44px_-36px_rgba(0,0,0,0.28)]' : 'hover:border-[#b8b8b8]',
+      )}
     >
-      <div className="relative h-full overflow-hidden p-3">
-        <div className="relative h-full overflow-hidden border border-[#ddd6ca] bg-[#efebe2]">
-          <img
-            src={project.image}
-            alt={project.title}
-            className={`h-full w-full object-cover transition duration-500 ease-out ${
-              isActive
-                ? 'scale-[1.015] grayscale-0'
-                : 'grayscale group-hover:scale-[1.018] group-hover:grayscale-0 group-hover:brightness-[1.03]'
-            }`}
-          />
-          <div
-            className={`absolute inset-0 transition-opacity duration-300 ${
-              isFeatured
-                ? 'bg-gradient-to-t from-black/8 via-transparent to-transparent opacity-100'
-                : 'bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100'
-            }`}
-          />
+      <div className='relative h-full overflow-hidden border border-[#dcdcdc] bg-white'>
+        <img
+          src={project.image}
+          alt={project.title}
+          className={cn(
+            'h-full w-full object-cover grayscale transition duration-700 ease-out',
+            isActive ? 'scale-[1.04]' : 'group-hover:scale-[1.05]',
+          )}
+        />
+        <div className='absolute inset-0 bg-gradient-to-t from-black/42 via-transparent to-transparent' />
+        <div className='absolute inset-x-0 bottom-0 p-3.5'>
+          <p className='text-[9px] uppercase tracking-[0.24em] text-white/68'>{project.category}</p>
+          <h3 className='mt-2 line-clamp-2 text-sm leading-[1.05] text-white sm:text-base'>{project.title}</h3>
         </div>
       </div>
-
-      {isActive && (
-        <motion.div
-          layoutId="active-project-border"
-          className="pointer-events-none absolute inset-0 border border-[#bfb4a2]"
-          transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-        />
-      )}
     </motion.button>
   );
 }
