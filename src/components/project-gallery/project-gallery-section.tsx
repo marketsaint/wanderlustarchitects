@@ -7,8 +7,8 @@ import { projects } from '../../lib/projects';
 
 const GRID_COLUMNS = 5;
 const CARD_SIZE = 220;
-const GAP = 18;
-const VIEWPORT_PADDING = 22;
+const GAP = 10;
+const VIEWPORT_PADDING = 8;
 const MAX_ZOOM_COLUMNS = 3;
 const PANEL_FALLBACK_HEIGHT = 280;
 
@@ -99,6 +99,7 @@ export function ProjectGallerySection() {
   }, [columns, contentWidth]);
 
   const selectedProject = projects.find((project) => project.id === selectedProjectId) ?? null;
+  const isManualScrollMode = Boolean(selectedProject);
   const zoomPercent = Math.round((cardSize / Math.max(overviewLayout.cardSize, 1)) * 100);
 
   const selectedIndex = useMemo(() => {
@@ -113,6 +114,7 @@ export function ProjectGallerySection() {
   const maxPanX = Math.max(0, contentWidthTotal - contentWidth);
   const maxPanY = Math.max(0, contentHeight - contentHeightLimit);
   const isCanvasPannable = maxPanX > 0 || maxPanY > 0;
+  const overviewBaseOffsetY = !selectedProject && contentHeight < contentHeightLimit ? -Math.max(0, (contentHeightLimit - contentHeight) / 2) : 0;
   const canvasItems = useMemo(() => {
     const items: Array<{ kind: 'project'; projectId: number } | { kind: 'panel'; projectId: number }> = [];
 
@@ -157,8 +159,8 @@ export function ProjectGallerySection() {
       setOffsetX(0);
       setOffsetY(0);
     } else {
-      setOffsetX((current) => clampOffsetX(current));
-      setOffsetY((current) => clampOffsetY(current));
+      setOffsetX(0);
+      setOffsetY(0);
     }
   }, [contentHeightLimit, maxPanX, maxPanY, selectedProjectId, viewportSize.height, viewportSize.width]);
 
@@ -215,20 +217,16 @@ export function ProjectGallerySection() {
       return;
     }
 
-    if (!shouldAutoCenter && panelHeight === PANEL_FALLBACK_HEIGHT) {
-      return;
-    }
-
     const rowTop = selectedRow * (cardSize + GAP);
-    const groupHeight = cardSize + GAP + panelHeight;
-    const centeredOffset = contentHeightLimit / 2 - (rowTop + groupHeight / 2);
-    setOffsetX(clampOffsetX(0));
-    setOffsetY(clampOffsetY(centeredOffset));
+    viewportRef.current?.scrollTo({
+      top: Math.max(0, rowTop - VIEWPORT_PADDING),
+      behavior: 'smooth',
+    });
 
     if (shouldAutoCenter) {
       setShouldAutoCenter(false);
     }
-  }, [cardSize, contentHeightLimit, maxPanX, panelHeight, selectedProjectId, selectedRow, shouldAutoCenter]);
+  }, [cardSize, panelHeight, selectedProjectId, selectedRow, shouldAutoCenter]);
 
   const resetOverview = () => {
     setSelectedProjectId(null);
@@ -236,6 +234,7 @@ export function ProjectGallerySection() {
     setOffsetX(0);
     setOffsetY(0);
     setShouldAutoCenter(false);
+    viewportRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -296,12 +295,11 @@ export function ProjectGallerySection() {
   };
 
   const handleWheel = (event: ReactWheelEvent<HTMLDivElement>) => {
-    event.preventDefault();
-
     if (selectedProjectId) {
       return;
     }
 
+    event.preventDefault();
     setZoomProgress((current) => clamp(current - event.deltaY * 0.0014, 0, 1));
   };
 
@@ -336,7 +334,7 @@ export function ProjectGallerySection() {
   };
 
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === 'mouse' && isCanvasPannable) {
+    if (event.pointerType === 'mouse' && isCanvasPannable && !selectedProjectId) {
       const nextOffsets = getAutoPanOffsets(event.clientX, event.clientY);
       setOffsetX(nextOffsets.x);
       setOffsetY(nextOffsets.y);
@@ -403,23 +401,23 @@ export function ProjectGallerySection() {
       <div className='relative flex h-full flex-col'>
         <div
           ref={viewportRef}
-          className='relative h-full overflow-hidden bg-white'
+          className={isManualScrollMode ? 'relative h-full overflow-y-auto overflow-x-hidden bg-white' : 'relative h-full overflow-hidden bg-white'}
           onClickCapture={handleClickCapture}
           onWheel={handleWheel}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          style={{ touchAction: 'none', cursor: isCanvasPannable ? (dragState ? 'grabbing' : 'move') : 'default' }}
+          style={{ touchAction: isManualScrollMode ? 'pan-y' : 'none', cursor: !selectedProjectId && isCanvasPannable ? (dragState ? 'grabbing' : 'move') : 'default' }}
         >
           <motion.div
-            className='absolute inset-x-0 top-0 px-4 py-4 sm:px-5 sm:py-5 lg:px-6 lg:py-6'
-            animate={{ x: offsetX, y: offsetY }}
+            className={isManualScrollMode ? 'relative px-2 py-2 sm:px-2.5 sm:py-2.5 lg:px-3 lg:py-3' : 'absolute inset-x-0 top-0 px-2 py-2 sm:px-2.5 sm:py-2.5 lg:px-3 lg:py-3'}
+            animate={isManualScrollMode ? { x: 0, y: 0 } : { x: offsetX, y: offsetY + overviewBaseOffsetY }}
             transition={{ type: 'spring', stiffness: dragState ? 500 : 240, damping: dragState ? 44 : 30, mass: 0.45 }}
           >
             <LayoutGroup id='wanderlust-project-canvas'>
               <div
-                className='grid gap-[18px]'
+                className='grid gap-[10px]'
                 style={{
                   gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
                 }}

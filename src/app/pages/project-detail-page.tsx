@@ -25,7 +25,7 @@ export default function ProjectDetailPage() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate(projectsRootPath)}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-all hover:bg-white/10"
+              className="flex h-11 w-11 items-center justify-center border border-white/10 bg-white/5 transition-all hover:bg-white/10"
             >
               <ArrowLeft size={18} className="text-white/80" />
             </button>
@@ -107,7 +107,7 @@ export default function ProjectDetailPage() {
           ].map((item, index) => (
             <motion.div
               key={item.label}
-              className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5"
+              className="border border-white/10 bg-white/[0.03] p-5"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
@@ -133,7 +133,7 @@ export default function ProjectDetailPage() {
       <section className="px-6 py-16 md:px-12 md:py-24">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
           <motion.div
-            className="overflow-hidden rounded-[32px] border border-white/10 bg-black/40"
+            className="overflow-hidden border border-white/10 bg-black/40"
             initial={{ opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -194,7 +194,7 @@ export default function ProjectDetailPage() {
             {supportingSections.map((section, index) => (
               <motion.article
                 key={section.title}
-                className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 md:p-8"
+                className="border border-white/10 bg-white/[0.03] p-6 md:p-8"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-80px' }}
@@ -225,7 +225,7 @@ export default function ProjectDetailPage() {
 
       <section className="px-6 pb-16 md:px-12 md:pb-24">
         <motion.div
-          className="mx-auto flex max-w-7xl flex-col gap-6 rounded-[32px] border border-white/10 bg-gradient-to-br from-white/[0.05] via-white/[0.02] to-transparent p-8 md:flex-row md:items-center md:justify-between md:p-10"
+          className="mx-auto flex max-w-7xl flex-col gap-6 border border-white/10 bg-gradient-to-br from-white/[0.05] via-white/[0.02] to-transparent p-8 md:flex-row md:items-center md:justify-between md:p-10"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}

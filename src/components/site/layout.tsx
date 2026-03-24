@@ -97,7 +97,7 @@ function Header({
       useLightTheme
         ? isActiveLink(href)
           ? 'bg-black !text-white shadow-[0_10px_24px_rgba(0,0,0,0.34)]'
-          : 'text-white/82 hover:bg-black hover:!text-white'
+          : '!text-[#f5efe3] hover:bg-white hover:!text-black'
         : isActiveLink(href)
           ? 'bg-white !text-black shadow-[0_10px_24px_rgba(0,0,0,0.08)]'
           : 'text-black/70 hover:bg-black hover:!text-white',
@@ -109,7 +109,7 @@ function Header({
       useLightTheme
         ? isActiveLink(href)
           ? 'bg-black !text-white shadow-[0_10px_24px_rgba(0,0,0,0.34)]'
-          : 'text-white/85 hover:bg-black hover:!text-white'
+          : '!text-[#f5efe3] hover:bg-white hover:!text-black'
         : isActiveLink(href)
           ? 'bg-white !text-black shadow-[0_10px_24px_rgba(0,0,0,0.08)]'
           : 'text-black/75 hover:bg-black hover:!text-white',
@@ -227,7 +227,7 @@ function Header({
                   )}
                   aria-hidden={!desktopExpanded}
                 >
-                  <nav className='flex items-center gap-2 pr-3' aria-label='Primary'>
+                  <nav className={cn('flex items-center gap-2 pr-3', useLightTheme && 'text-[#f5efe3]')} aria-label='Primary'>
                     <Link to={homeLinkHref} className={desktopLinkClass(homeLinkHref)} tabIndex={desktopExpanded ? 0 : -1}>
                       Home
                     </Link>
@@ -243,7 +243,7 @@ function Header({
                     className={cn(
                       'shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-[10px] uppercase tracking-[0.16em] transition',
                       useLightTheme
-                        ? 'border border-white/35 bg-white/12 text-white hover:bg-white hover:text-black'
+                        ? 'border border-white/35 bg-white/12 !text-[#f5efe3] hover:bg-white hover:!text-black'
                         : 'border border-black/20 bg-white/78 text-black/80 hover:bg-black hover:text-white',
                     )}
                   >
@@ -282,7 +282,7 @@ function Header({
                 className={cn(
                   'rounded-full px-3 py-2 text-xs uppercase tracking-[0.2em] transition-colors',
                   useLightTheme
-                    ? 'border border-white/35 bg-white/12 text-white hover:bg-white hover:text-black'
+                    ? 'border border-white/35 bg-white/12 !text-[#f5efe3] hover:bg-white hover:!text-black'
                     : 'border border-black/15 bg-black text-white hover:bg-black/85',
                 )}
               >

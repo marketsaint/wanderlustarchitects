@@ -14,7 +14,7 @@ export function ProjectGalleryDetailPanel({
   return (
     <motion.div
       layout
-      className='pointer-events-auto w-full border border-[#d9d9d9] bg-white p-4 shadow-[0_28px_70px_-52px_rgba(0,0,0,0.32)] sm:p-5'
+      className='pointer-events-auto w-full border border-[#d9d9d9] bg-white p-3 shadow-[0_28px_70px_-52px_rgba(0,0,0,0.32)] sm:p-4'
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
@@ -26,15 +26,15 @@ export function ProjectGalleryDetailPanel({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          className='grid gap-4 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] xl:items-stretch'
+          className='grid gap-3 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] xl:items-stretch'
         >
-          <div className='border border-[#d9d9d9] bg-white p-4 sm:p-4'>
-            <div className='h-full min-h-[18rem] overflow-hidden border border-[#dcdcdc] bg-white xl:min-h-[25rem]'>
-              <img src={project.image} alt={project.title} className='h-full w-full object-cover grayscale' />
+          <div className='border border-[#d9d9d9] bg-white p-2.5 sm:p-3'>
+            <div className='h-full min-h-[18rem] overflow-hidden border border-[#e3e3e3] bg-white xl:min-h-[25rem]'>
+              <img src={project.image} alt={project.title} className='h-full w-full object-cover' />
             </div>
           </div>
 
-          <div className='flex flex-col justify-between border border-[#d9d9d9] bg-white p-6 sm:p-8'>
+          <div className='flex flex-col justify-between border border-[#d9d9d9] bg-white p-5 sm:p-6'>
             <div className='space-y-6'>
               <div>
                 <p className='text-[10px] uppercase tracking-[0.3em] text-black/55'>Selected Project</p>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type AnchorHTMLAttributes, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode, type Ref } from 'react';
 import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
+import { cn } from '@/app/components/ui/utils';
 import { ShinyText } from './shiny-text';
 
 function useMagneticMotion(disabled: boolean, config: { translate?: number; rotate?: number; scale?: number; stiffness?: number; damping?: number } = {}) {
@@ -174,12 +175,14 @@ type HeroCinematicContentProps = {
   contact: { phone: string; whatsapp: string };
   chips: string[];
   headline: string;
+  variant?: 'default' | 'india';
 };
 
-export function HeroCinematicContent({ contact, chips, headline }: HeroCinematicContentProps) {
+export function HeroCinematicContent({ contact, chips, headline, variant = 'default' }: HeroCinematicContentProps) {
   const prefersReducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const isIndiaVariant = variant === 'india';
 
   useEffect(() => {
     setMounted(true);
@@ -188,25 +191,33 @@ export function HeroCinematicContent({ contact, chips, headline }: HeroCinematic
   const reducedMotion = mounted ? prefersReducedMotion : false;
 
   const heroStatements = useMemo(
-    () => [
-      {
-        heading: headline,
-        body: 'From high-value residences and hospitality spaces in Jaipur, Rajasthan to premium workplace and lifestyle projects in Dubai, UAE, our team delivers luxury architecture and interior design with measurable execution clarity. Every stage is structured for decision speed: concept validation, buildable detailing, consultant coordination, and site-ready documentation.',
-      },
-      {
-        heading: 'Design, Fit-Out, and\nDelivery Built for\nSpeed, Clarity, Control.',
-        body: 'We design spaces that reduce uncertainty at every phase. Our process aligns concept, approvals, detailing, and site coordination into one clear execution path so investors, founders, and homeowners can move faster with confidence.',
-      },
-      {
-        heading: 'From Brief to Handover,\nEvery Decision Built\nfor Site Precision.',
-        body: 'Wanderlust Architects combines design intelligence with delivery control. You get structured timelines, BOQ-ready documentation, and a single-point team that protects intent, speed, and quality across architecture, interiors, and fit-outs.',
-      },
-      {
-        heading: 'Luxury Architecture and\nInteriors Structured for\nBuildable Execution.',
-        body: 'Our studio balances aesthetic depth with technical rigor. From premium residences and hospitality to office environments, we build decision-ready design systems that perform on site, not just in presentations.',
-      },
-    ],
-    [headline],
+    () =>
+      isIndiaVariant
+        ? [
+            {
+              heading: headline,
+              body: 'Wanderlust Architects shapes villas, apartments, boutique hospitality, and executive environments with warm material intelligence, disciplined planning, and site-ready execution clarity.',
+            },
+          ]
+        : [
+            {
+              heading: headline,
+              body: 'From high-value residences and hospitality spaces in Jaipur, Rajasthan to premium workplace and lifestyle projects in Dubai, UAE, our team delivers luxury architecture and interior design with measurable execution clarity. Every stage is structured for decision speed: concept validation, buildable detailing, consultant coordination, and site-ready documentation.',
+            },
+            {
+              heading: 'Design, Fit-Out, and\nDelivery Built for\nSpeed, Clarity, Control.',
+              body: 'We design spaces that reduce uncertainty at every phase. Our process aligns concept, approvals, detailing, and site coordination into one clear execution path so investors, founders, and homeowners can move faster with confidence.',
+            },
+            {
+              heading: 'From Brief to Handover,\nEvery Decision Built\nfor Site Precision.',
+              body: 'Wanderlust Architects combines design intelligence with delivery control. You get structured timelines, BOQ-ready documentation, and a single-point team that protects intent, speed, and quality across architecture, interiors, and fit-outs.',
+            },
+            {
+              heading: 'Luxury Architecture and\nInteriors Structured for\nBuildable Execution.',
+              body: 'Our studio balances aesthetic depth with technical rigor. From premium residences and hospitality to office environments, we build decision-ready design systems that perform on site, not just in presentations.',
+            },
+          ],
+    [headline, isIndiaVariant],
   );
 
   useEffect(() => {
@@ -221,7 +232,7 @@ export function HeroCinematicContent({ contact, chips, headline }: HeroCinematic
     return () => window.clearInterval(intervalId);
   }, [heroStatements.length, reducedMotion]);
 
-  const headlineStart = 0.9;
+  const headlineStart = isIndiaVariant ? 0.28 : 0.9;
   const ctaDelay = headlineStart + 0.84;
   const chipsDelay = ctaDelay + 0.14;
   const activeStatement = heroStatements[activeIndex] || heroStatements[0];
@@ -235,7 +246,7 @@ export function HeroCinematicContent({ contact, chips, headline }: HeroCinematic
         animate={{ opacity: 1 }}
         transition={reducedMotion ? { duration: 0 } : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className='min-h-[17.5rem] max-w-5xl'>
+        <div className={cn('min-h-[17.5rem] max-w-5xl', isIndiaVariant && 'max-w-[52rem]')}>
           <AnimatePresence mode='wait' initial={false}>
             <motion.div
               key={activeIndex}
@@ -244,14 +255,26 @@ export function HeroCinematicContent({ contact, chips, headline }: HeroCinematic
               exit={reducedMotion ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: -14, filter: 'blur(5px)' }}
               transition={reducedMotion ? { duration: 0 } : { duration: 0.7, delay: activeIndex === 0 ? headlineStart : 0, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className='relative max-w-5xl'>
-                <div className='pointer-events-none absolute -inset-x-5 -inset-y-6 rounded-[34px] bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.12),transparent_22%),linear-gradient(120deg,rgba(7,7,9,0.38)_0%,rgba(7,7,9,0.24)_42%,rgba(7,7,9,0.12)_100%)] backdrop-blur-[2px]' />
+              <div className={cn('relative max-w-5xl', isIndiaVariant && 'max-w-[52rem]')}>
+                <div
+                  className={cn(
+                    'pointer-events-none absolute -inset-x-5 -inset-y-6 rounded-[34px] bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.12),transparent_22%),linear-gradient(120deg,rgba(7,7,9,0.38)_0%,rgba(7,7,9,0.24)_42%,rgba(7,7,9,0.12)_100%)] backdrop-blur-[2px]',
+                    isIndiaVariant &&
+                      'bg-[radial-gradient(circle_at_14%_14%,rgba(244,226,189,0.11),transparent_24%),linear-gradient(120deg,rgba(10,9,8,0.72)_0%,rgba(10,9,8,0.44)_42%,rgba(10,9,8,0.18)_100%)]',
+                  )}
+                />
                 <div className='relative z-[1]'>
+                  {isIndiaVariant ? (
+                    <p className='mb-4 text-[10px] uppercase tracking-[0.34em] text-[#d8c2a0]/64'>India Studio | Jaipur + Surat</p>
+                  ) : null}
                   <h1
                     aria-label={activeHeadingLines.join(' ')}
-                    className='text-4xl leading-[0.98] text-white drop-shadow-[0_10px_34px_rgba(0,0,0,0.82)] sm:text-5xl lg:text-[5.15rem] [transform-style:preserve-3d]'
+                    className={cn(
+                      'text-4xl leading-[0.98] text-white drop-shadow-[0_10px_34px_rgba(0,0,0,0.82)] sm:text-5xl lg:text-[5.15rem] [transform-style:preserve-3d]',
+                      isIndiaVariant && 'max-w-[9ch] text-[#f3ead8] lg:text-[4.15rem] xl:text-[4.5rem]',
+                    )}
                   >
-                    <ShinyText speedInMs={7000} hoverTextColor='#f7e1b2' className='inline-flex flex-col gap-1'>
+                    <ShinyText speedInMs={7000} hoverTextColor={isIndiaVariant ? '#f3d8aa' : '#f7e1b2'} className='inline-flex flex-col gap-1'>
                       {activeHeadingLines.map((line) => (
                         <span key={line} className='block'>
                           {line}
@@ -260,7 +283,12 @@ export function HeroCinematicContent({ contact, chips, headline }: HeroCinematic
                     </ShinyText>
                   </h1>
 
-                  <p className='mt-5 max-w-4xl text-sm leading-relaxed text-zinc-200 sm:text-base [transform-style:preserve-3d] drop-shadow-[0_5px_16px_rgba(0,0,0,0.74)]'>
+                  <p
+                    className={cn(
+                      'mt-5 max-w-4xl text-sm leading-relaxed text-zinc-200 sm:text-base [transform-style:preserve-3d] drop-shadow-[0_5px_16px_rgba(0,0,0,0.74)]',
+                      isIndiaVariant && 'max-w-2xl text-[#f1ece4]/82',
+                    )}
+                  >
                     {activeStatement.body}
                   </p>
                 </div>
@@ -270,7 +298,7 @@ export function HeroCinematicContent({ contact, chips, headline }: HeroCinematic
         </div>
 
         <motion.div
-          className='mt-8 flex flex-wrap gap-3'
+          className={cn('mt-8 flex flex-wrap gap-3', isIndiaVariant && 'max-w-3xl')}
           initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={reducedMotion ? { duration: 0 } : { delay: ctaDelay, duration: 0.74, ease: [0.22, 1, 0.36, 1] }}
@@ -292,7 +320,7 @@ export function HeroCinematicContent({ contact, chips, headline }: HeroCinematic
         </motion.div>
 
         <motion.div
-          className='mt-6 grid max-w-5xl gap-3 sm:grid-cols-3 sm:auto-rows-fr'
+          className={cn('mt-6 grid max-w-5xl gap-3 sm:grid-cols-3 sm:auto-rows-fr', isIndiaVariant && 'max-w-[54rem]')}
           initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={reducedMotion ? { duration: 0 } : { delay: chipsDelay, duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
