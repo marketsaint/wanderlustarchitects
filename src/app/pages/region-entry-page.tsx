@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useNavigate } from 'react-router';
+import { cn } from '@/app/components/ui/utils';
 import { AmbientImageSlider } from '@/components/site/ambient-image-slider';
-import { BrandLogo } from '@/components/site/brand-logo';
-import { RegionSwitcher } from '@/components/site/region-switcher';
 import { siteImages } from '@/lib/site-content';
 import { persistSiteRegion, readPersistedRegion, type SiteRegionKey } from '@/lib/site-region';
 
@@ -45,10 +44,17 @@ export default function RegionEntryPage() {
   };
 
   return (
-    <section className='relative min-h-screen overflow-hidden bg-black text-white'>
+    <section
+      className='relative min-h-screen overflow-hidden bg-black text-white'
+      style={{
+        backgroundImage: `url(${backgroundImages[0]})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <AmbientImageSlider
         images={backgroundImages}
-        imageClassName='scale-[1.04] grayscale contrast-[1.02] brightness-[0.42]'
+        imageClassName='scale-[1.04] grayscale contrast-[1.01] brightness-[0.62]'
       />
       <div
         className='pointer-events-none absolute inset-0 opacity-40'
@@ -60,7 +66,7 @@ export default function RegionEntryPage() {
           backgroundSize: '100px 100px',
         }}
       />
-      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.1),transparent_30%),linear-gradient(180deg,rgba(0,0,0,0.38)_0%,rgba(0,0,0,0.74)_100%)]' />
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_30%),linear-gradient(180deg,rgba(0,0,0,0.18)_0%,rgba(0,0,0,0.52)_100%)]' />
 
       <AnimatePresence mode='wait'>
         {stage === 'loader' ? (
@@ -78,20 +84,17 @@ export default function RegionEntryPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               >
-                <BrandLogo
-                  className='flex-col justify-center gap-4 text-center'
-                  iconSrc='/branding/wanderlust_architects_logo-icon-White.png'
-                  iconClassName='h-20 w-20'
-                  textClassName='text-center text-sm tracking-[0.32em] text-white sm:text-base'
-                />
+                <p className='font-[Montserrat] text-[0.95rem] font-semibold uppercase tracking-[0.34em] text-white sm:text-[1.05rem]'>
+                  Wanderlust Architects
+                </p>
               </motion.div>
               <motion.div
-                className='inline-flex items-center rounded-full border border-white/16 bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.34em] text-white/68'
+                className='inline-flex items-center border border-white/16 bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.34em] text-white/68'
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
               >
-                India
+                Select Region
               </motion.div>
               <div className='w-full max-w-[18rem] space-y-3'>
                 <motion.div
@@ -119,25 +122,51 @@ export default function RegionEntryPage() {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.div
-              className='w-full max-w-[44rem] border border-white/18 bg-black/48 px-8 py-12 shadow-[0_34px_90px_-60px_rgba(0,0,0,0.56)] backdrop-blur-xl sm:px-12 sm:py-14'
+              className='grid aspect-[16/9] w-full max-w-[68rem] grid-rows-[1fr_auto_1fr] border border-white/20 bg-black/10 px-8 py-10 shadow-[0_36px_80px_-56px_rgba(0,0,0,0.65)] backdrop-blur-[8px] sm:px-12 sm:py-14'
               animate={isLeaving ? { scale: 0.98, opacity: 0.72 } : { scale: 1, opacity: 1 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className='flex flex-col items-center gap-8 text-center'>
-                <BrandLogo
-                  className='flex-col justify-center gap-4 text-center'
-                  iconSrc='/branding/wanderlust_architects_logo-icon-White.png'
-                  iconClassName='h-16 w-16 sm:h-20 sm:w-20'
-                  textClassName='text-center text-[11px] tracking-[0.28em] text-white sm:text-sm sm:tracking-[0.34em]'
-                />
-                <div className='space-y-3'>
-                  <p className='text-[10px] uppercase tracking-[0.34em] text-white/52'>Select Studio</p>
-                  <h1 className='font-[Cormorant_Garamond] text-5xl leading-none text-white sm:text-7xl'>Choose Your Studio</h1>
-                  <p className='mx-auto max-w-[28rem] text-sm leading-7 text-white/64 sm:text-base'>
-                    Select India or UAE to enter the projects gallery.
-                  </p>
+              <div className='contents text-center'>
+                <div className='flex items-start justify-center pt-3'>
+                  <div className='space-y-5'>
+                    <p className='font-[Montserrat] text-[0.95rem] font-semibold uppercase tracking-[0.34em] text-white sm:text-[1.15rem]'>
+                      Wanderlust Architects
+                    </p>
+                  </div>
                 </div>
-                <RegionSwitcher activeRegion={selectedRegion} onSelect={handleSelect} size='lg' className='justify-center' inverted />
+
+                <div className='flex flex-col items-center justify-center gap-8 sm:gap-10'>
+                  <div className='space-y-4'>
+                    <p className='text-[10px] uppercase tracking-[0.36em] text-white/52 sm:text-xs'>Select Region</p>
+                    <p className='text-[clamp(2.8rem,6.5vw,5.8rem)] leading-[0.88] text-white'>IND / UAE</p>
+                  </div>
+                  <div className='inline-flex items-center border border-white/20 bg-white/6 p-1.5'>
+                    {[
+                      { key: 'india', label: 'IND' },
+                      { key: 'dubai', label: 'UAE' },
+                    ].map((option) => {
+                      const isActive = option.key === selectedRegion;
+
+                      return (
+                        <button
+                          key={option.key}
+                          type='button'
+                          onClick={() => handleSelect(option.key as SiteRegionKey)}
+                          className={cn(
+                            'px-6 py-3 text-sm uppercase tracking-[0.28em] transition-colors sm:px-8',
+                            isActive ? 'bg-white text-black' : 'text-white/72 hover:bg-white/10 hover:text-white',
+                          )}
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className='flex items-end justify-center'>
+                  <div className='h-px w-36 bg-white/18' />
+                </div>
               </div>
             </motion.div>
           </motion.div>

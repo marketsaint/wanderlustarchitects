@@ -144,8 +144,8 @@ function Header({
         >
           <Link
             to='/projects'
-              className='min-w-0 max-w-[calc(100%-88px)] flex flex-1 items-center overflow-hidden pr-2 sm:pr-3 xl:max-w-none xl:flex-none xl:pr-5'
-              aria-label='Wanderlust Architects projects'
+            className='flex min-w-0 max-w-[calc(100%-88px)] flex-1 items-center overflow-hidden pl-1 pr-2 sm:pl-2 sm:pr-3 xl:max-w-none xl:flex-none xl:pr-5'
+            aria-label='Wanderlust Architects projects'
           >
             <BrandLogo
               className='min-w-0 gap-1.5 sm:gap-2.5'
@@ -182,8 +182,8 @@ function Header({
 
         <div className='hidden xl:flex xl:justify-center'>
           <div
-            className={cn(
-              'mx-auto w-full overflow-hidden rounded-[24px] border px-1.5 py-2 backdrop-blur-xl transition-[max-width,background-color,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                  className={cn(
+                    'mx-auto w-full overflow-hidden rounded-[24px] border px-3 py-2 backdrop-blur-xl transition-[max-width,background-color,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
               useLightTheme
                 ? 'border border-white/24 bg-black/34 shadow-[0_16px_42px_rgba(0,0,0,0.38)]'
                 : 'border border-black/15 bg-white/68 shadow-[0_14px_36px_rgba(0,0,0,0.14)]',
@@ -196,17 +196,17 @@ function Header({
             onFocusCapture={() => setDesktopExpanded(true)}
             onBlur={handleDesktopBlur}
           >
-            <div className={cn('flex min-h-[58px] items-center gap-3', desktopExpanded ? 'justify-between' : 'justify-center')}>
+            <div className={cn('flex min-h-[58px] items-center gap-4', desktopExpanded ? 'justify-between' : 'justify-center')}>
               <Link
                 to='/projects'
-                className={cn('min-w-0 shrink-0', desktopExpanded ? 'pr-3' : 'pr-0')}
+                className={cn('flex min-w-0 shrink-0 items-center pl-3', desktopExpanded ? 'pr-3' : 'pr-3')}
                 aria-label='Wanderlust Architects projects'
               >
                 <BrandLogo
-                  className='min-w-0 gap-2.5'
+                  className='min-w-0 items-center gap-2.5'
                   iconClassName={cn('h-8 w-8', isDubaiBrand && 'rounded-full')}
                   iconImageClassName={cn(isDubaiBrand && useLightTheme && 'invert')}
-                  textClassName={cn('truncate text-[10px] tracking-[0.14em]', useLightTheme && 'text-white')}
+                  textClassName={cn('truncate text-center text-[10px] leading-none tracking-[0.14em]', useLightTheme && 'text-white')}
                   iconSrc={
                     isDubaiBrand
                       ? '/branding/wanderlust-logo-icon.png'
@@ -310,67 +310,82 @@ function formatDisplayPhone(phone: string) {
 
 function FooterPanel({ contact }: { contact: { phone: string; email: string; whatsapp: string } }) {
   return (
-    <Container className='grid gap-12 py-16 lg:grid-cols-[1.3fr_1fr_1fr]'>
-      <div className='space-y-6'>
-        <BrandLogo className='gap-3' iconClassName='h-10 w-10' textClassName='text-xs tracking-[0.22em]' />
-        <h3 className='max-w-xl text-4xl leading-tight'>
-          Premium spatial design for residences, offices, hospitality, and high-precision project execution.
-        </h3>
-        <div className='flex flex-wrap gap-3'>
-          <Link to='/contact' className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'>
-            Book Consultation
-          </Link>
-          <a href={contact.whatsapp} className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'>
-            WhatsApp
+    <Container className='grid gap-0 py-14 lg:grid-cols-[1.35fr_0.9fr_0.95fr] lg:items-stretch'>
+      <div className='flex min-h-[360px] flex-col justify-between border-t border-mist px-0 py-10 lg:border-b lg:pr-10'>
+        <div className='space-y-6'>
+          <BrandLogo className='gap-3' iconClassName='h-10 w-10' textClassName='text-xs tracking-[0.22em]' />
+          <h3 className='max-w-xl text-4xl leading-tight'>
+            Premium spatial design for residences, offices, hospitality, and high-precision project execution.
+          </h3>
+        </div>
+        <div className='space-y-4 pt-8'>
+          <div className='flex flex-wrap gap-3'>
+            <Link to='/contact' className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'>
+              Book Consultation
+            </Link>
+            <a href={contact.whatsapp} className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'>
+              WhatsApp
+            </a>
+          </div>
+          <div className='flex flex-wrap gap-3'>
+            {siteSocialLinks.map((social) => {
+              const Icon = social.label === 'Instagram' ? Instagram : Linkedin;
+
+              return (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target='_blank'
+                  rel='noreferrer'
+                  className='inline-flex items-center gap-2 rounded-md border border-ink/15 bg-white/70 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-ink transition hover:bg-ink hover:text-smoke'
+                >
+                  <Icon size={14} />
+                  <span>{social.label}</span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      <div className='flex min-h-[360px] flex-col justify-between border-t border-mist py-10 lg:border-b lg:border-l lg:px-10'>
+        <div className='space-y-6'>
+          <p className='text-xs uppercase tracking-[0.2em] text-iron'>Studios</p>
+          <div className='space-y-8'>
+            {siteOffices.map((office) => (
+              <div key={office.city} className='space-y-2'>
+                <p className='text-lg'>{office.city}</p>
+                {office.phone ? (
+                  <a href={`tel:${office.phone}`} className='inline-flex items-center gap-2 text-sm text-iron transition hover:text-ink'>
+                    <Phone size={14} />
+                    <span>{office.phone}</span>
+                  </a>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className='max-w-[16rem] text-xs uppercase tracking-[0.18em] text-iron'>India and UAE coordination with one design language and region-specific execution.</p>
+      </div>
+      <div className='flex min-h-[360px] flex-col justify-between border-y border-mist py-10 lg:border-l lg:px-10'>
+        <div className='space-y-6'>
+          <p className='text-xs uppercase tracking-[0.2em] text-iron'>Connect</p>
+          <div className='space-y-4'>
+            <Link to='/projects' className='block text-lg hover:text-iron'>
+              Portfolio
+            </Link>
+            <Link to='/blog' className='block text-lg hover:text-iron'>
+              Blogs
+            </Link>
+          </div>
+        </div>
+        <div className='space-y-3'>
+          <a href={`mailto:${contact.email}`} className='block text-sm hover:text-iron'>
+            {contact.email}
+          </a>
+          <a href={`tel:${contact.phone}`} className='block text-sm hover:text-iron'>
+            {formatDisplayPhone(contact.phone)}
           </a>
         </div>
-        <div className='flex flex-wrap gap-3'>
-          {siteSocialLinks.map((social) => {
-            const Icon = social.label === 'Instagram' ? Instagram : Linkedin;
-
-            return (
-              <a
-                key={social.label}
-                href={social.href}
-                target='_blank'
-                rel='noreferrer'
-                className='inline-flex items-center gap-2 rounded-md border border-ink/15 bg-white/70 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-ink transition hover:bg-ink hover:text-smoke'
-              >
-                <Icon size={14} />
-                <span>{social.label}</span>
-              </a>
-            );
-          })}
-        </div>
-      </div>
-      <div className='space-y-3'>
-        <p className='text-xs uppercase tracking-[0.2em] text-iron'>Studios</p>
-        {siteOffices.map((office) => (
-          <div key={office.city} className='space-y-1'>
-            <p className='text-sm'>{office.city}</p>
-            {office.phone ? (
-              <a href={`tel:${office.phone}`} className='inline-flex items-center gap-2 text-sm text-iron transition hover:text-ink'>
-                <Phone size={14} />
-                <span>{office.phone}</span>
-              </a>
-            ) : null}
-          </div>
-        ))}
-      </div>
-      <div className='space-y-3'>
-        <p className='text-xs uppercase tracking-[0.2em] text-iron'>Connect</p>
-        <Link to='/projects' className='block text-sm hover:text-iron'>
-          Portfolio
-        </Link>
-        <Link to='/blog' className='block text-sm hover:text-iron'>
-          Blogs
-        </Link>
-        <a href={`mailto:${contact.email}`} className='block text-sm hover:text-iron'>
-          {contact.email}
-        </a>
-        <a href={`tel:${contact.phone}`} className='block text-sm hover:text-iron'>
-          {formatDisplayPhone(contact.phone)}
-        </a>
       </div>
     </Container>
   );

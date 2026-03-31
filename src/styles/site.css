@@ -54,6 +54,21 @@ img {
   outline-offset: 2px;
 }
 
+:where([class*='rounded']),
+:where(button),
+:where(input),
+:where(select),
+:where(textarea),
+:where(img),
+:where([role='button']) {
+  border-radius: 0 !important;
+}
+
+:where([class*='rounded'])::before,
+:where([class*='rounded'])::after {
+  border-radius: 0 !important;
+}
+
 .prose h2,
 .prose h3 {
   scroll-margin-top: 6rem;

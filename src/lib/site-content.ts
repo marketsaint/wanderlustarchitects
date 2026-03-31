@@ -27,8 +27,10 @@ export type HeroSlide = {
 
 export type TeamMember = {
   name: string;
+  displayName?: string;
   role: string;
   image: string;
+  linkedin?: string;
 };
 
 export type Testimonial = {
@@ -64,18 +66,16 @@ export const siteImages = {
     'https://wanderlustarchitects.com/wp-content/uploads/2025/03/PROPEX-01.jpg',
   ],
   serviceHero: {
-    'Architecture Design':
+    Architecture:
       'https://wanderlustarchitects.com/wp-content/uploads/2023/05/Enscape_2023-08-24-18-12-48-scaled-e1719249272569.jpg',
-    'Interior Design':
+    Interior:
       'https://wanderlustarchitects.com/wp-content/uploads/2023/05/JBO_MD-CABIN-01.jpg',
-    'Office Fit-Outs':
-      'https://wanderlustarchitects.com/wp-content/uploads/2023/05/JBO_MD-CABIN-01.jpg',
-    'Project Delivery':
-      'https://wanderlustarchitects.com/wp-content/uploads/2023/05/Enscape_2023-08-24-18-12-48-scaled-e1719249272569.jpg',
+    Landscape:
+      'https://wanderlustarchitects.com/wp-content/uploads/2023/05/LANDSCAPE-01.jpg',
     'Building Documentation':
       'https://wanderlustarchitects.com/wp-content/uploads/2024/11/PROPOSED-PARKING-PLAN-LINE-DRAWING-copy-scaled.webp',
-    'Landscape Design':
-      'https://wanderlustarchitects.com/wp-content/uploads/2023/05/LANDSCAPE-01.jpg',
+    '3D Visualization':
+      'https://wanderlustarchitects.com/wp-content/uploads/2023/05/Enscape_2023-08-24-17-53-19-scaled.jpg',
   },
   team: [
     'https://wanderlustarchitects.com/wp-content/uploads/2025/03/raisar-bw.jpg',
@@ -136,32 +136,25 @@ export const journalTopics = ['Architecture', 'Interior', 'Hospitality', 'Reside
 
 export const services: ServiceDetail[] = [
   {
-    title: 'Architecture Design',
+    title: 'Architecture',
     copy: 'Context-aware architecture concepts translated into approval-ready and execution-ready packages.',
     points: ['Site response and massing', 'Design development drawings', 'Material and facade specifications'],
     categoryKey: 'commercial',
-    image: siteImages.serviceHero['Architecture Design'],
+    image: siteImages.serviceHero.Architecture,
   },
   {
-    title: 'Interior Design',
+    title: 'Interior',
     copy: 'Spatial planning and detailing calibrated for premium living, hospitality, and workplace outcomes.',
     points: ['Layout and circulation planning', 'Joinery and finish detailing', 'Lighting and styling packages'],
     categoryKey: 'residential',
-    image: siteImages.serviceHero['Interior Design'],
+    image: siteImages.serviceHero.Interior,
   },
   {
-    title: 'Office Fit-Outs',
-    copy: 'Fast-track workplace delivery with technical coordination and phased execution planning.',
-    points: ['Workplace programming', 'Fit-out construction sets', 'Vendor and site coordination'],
-    categoryKey: 'commercial',
-    image: siteImages.serviceHero['Office Fit-Outs'],
-  },
-  {
-    title: 'Project Delivery',
-    copy: 'Single-point ownership from consultant coordination to milestone closure and quality checks.',
-    points: ['BOQ and tender coordination', 'Milestone tracking', 'Execution QA reviews'],
-    categoryKey: 'commercial',
-    image: siteImages.serviceHero['Project Delivery'],
+    title: 'Landscape',
+    copy: 'Climate-aware outdoor systems that align aesthetic experience with long-term maintainability.',
+    points: ['Planting and zoning strategy', 'Hardscape technical detailing', 'Outdoor use programming'],
+    categoryKey: 'hospitality',
+    image: siteImages.serviceHero.Landscape,
   },
   {
     title: 'Building Documentation',
@@ -171,17 +164,29 @@ export const services: ServiceDetail[] = [
     image: siteImages.serviceHero['Building Documentation'],
   },
   {
-    title: 'Landscape Design',
-    copy: 'Climate-aware outdoor systems that align aesthetic experience with long-term maintainability.',
-    points: ['Planting and zoning strategy', 'Hardscape technical detailing', 'Outdoor use programming'],
-    categoryKey: 'hospitality',
-    image: siteImages.serviceHero['Landscape Design'],
+    title: '3D Visualization',
+    copy: 'Render-ready visualization packages that help clients, consultants, and stakeholders see decisions clearly before execution begins.',
+    points: ['Photoreal perspectives', 'Material and lighting studies', 'Presentation visuals for approvals'],
+    categoryKey: 'residential',
+    image: siteImages.serviceHero['3D Visualization'],
   },
 ];
 
 export const teamMembers: TeamMember[] = [
-  { name: 'Riddhiraj Raisar', role: 'Principal Architect', image: siteImages.team[0] },
-  { name: 'Shreyeshi Sharma', role: 'Director - Interiors', image: siteImages.team[1] },
+  {
+    name: 'Riddhiraj Raisar',
+    displayName: 'Riddhiraj R.',
+    role: 'Principal Architect',
+    image: siteImages.team[0],
+    linkedin: 'https://www.linkedin.com/search/results/all/?keywords=Riddhiraj%20Raisar%20WA%20BIM%20Studio',
+  },
+  {
+    name: 'Shreyeshi Sharma',
+    displayName: 'Shreyeshi S.',
+    role: 'Director - Interiors',
+    image: siteImages.team[1],
+    linkedin: 'https://www.linkedin.com/search/results/all/?keywords=Shreyeshi%20Sharma%20WA%20BIM%20Studio',
+  },
   { name: 'Uday Singh', role: 'Lead - Project Delivery', image: siteImages.team[2] },
 ];
 
@@ -210,9 +215,8 @@ export const testimonials: Testimonial[] = [
 ];
 
 export const siteOffices: SiteOffice[] = [
-  { city: 'Jaipur, Rajasthan' },
-  { city: 'Surat, Gujarat' },
-  { city: 'Dubai, UAE', phone: '+971 54 505 2126' },
+  { city: 'India', phone: '+91 98284 85111' },
+  { city: 'UAE', phone: '+971 54 505 2126' },
 ];
 
 export const siteSocialLinks: SiteSocialLink[] = [

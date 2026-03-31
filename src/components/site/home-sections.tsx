@@ -25,7 +25,7 @@ import { Badge, Button, Card, Container, Reveal, SectionTitle, Tabs } from './ui
 const heroHeadline = 'Luxury Spatial Outcomes,\nDocumented for\nReal-World Execution.';
 
 const indiaHeroPillars = [
-  { label: 'Studios', value: 'Jaipur + Surat' },
+  { label: 'Studios', value: 'India' },
   { label: 'Sector Lens', value: 'Luxury homes + boutique stays' },
   { label: 'Delivery', value: 'BOQ-ready execution' },
 ] as const;
@@ -101,7 +101,7 @@ function IndiaHero({ contact, proofBarCopy }: { contact: { phone: string; whatsa
         <div className='mt-16 grid w-full gap-4 sm:mt-20 lg:mt-14 lg:min-h-[calc(100svh-8.5rem)] lg:grid-rows-[auto_1fr_auto]'>
           <div className='flex flex-wrap items-center gap-3 border border-[#d7b98c]/20 bg-black/24 px-5 py-4 backdrop-blur-md'>
             <span className='h-px w-10 bg-[#d7b98c]/55' />
-            <p className='text-[10px] uppercase tracking-[0.34em] text-[#d8c2a0]/72'>India Studio | Jaipur + Surat</p>
+            <p className='text-[10px] uppercase tracking-[0.34em] text-[#d8c2a0]/72'>India Studio</p>
             <span className='hidden h-px flex-1 bg-white/10 sm:block' />
             <p className='text-[10px] uppercase tracking-[0.26em] text-white/42'>Luxury residences + boutique hospitality</p>
           </div>
@@ -630,23 +630,19 @@ export function HomeStatsSection() {
   const stats = [
     {
       label: 'Projects Completed',
-      value: undefined,
-      fallback: 'Project counts are validated and published per reporting cycle.',
+      value: '100+',
     },
     {
       label: 'Drawings Delivered',
-      value: undefined,
-      fallback: 'Drawing package volumes are shared after internal QA validation.',
+      value: '1 Million+',
     },
     {
       label: 'Design Awards',
-      value: undefined,
-      fallback: 'Recognition updates are published once formally announced.',
+      value: '3+',
     },
     {
       label: 'Active Projects',
-      value: undefined,
-      fallback: 'Active project load is communicated with current scheduling windows.',
+      value: '32+',
     },
   ];
 
@@ -654,7 +650,7 @@ export function HomeStatsSection() {
     <div className='grid gap-6 border border-mist bg-white p-8 shadow-soft sm:grid-cols-2 lg:grid-cols-4'>
       {stats.map((stat) => (
         <div key={stat.label} className='border-b border-mist pb-5 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6 last:border-none'>
-          {typeof stat.value === 'number' ? <p className='text-4xl'>{stat.value}+</p> : <p className='text-sm text-iron'>{stat.fallback}</p>}
+          <p className='font-[Cormorant_Garamond] text-[2.6rem] leading-none text-black'>{stat.value}</p>
           <p className='mt-2 text-xs uppercase tracking-[0.2em] text-iron'>{stat.label}</p>
         </div>
       ))}

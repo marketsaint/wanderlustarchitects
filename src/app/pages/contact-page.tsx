@@ -9,18 +9,16 @@ type Option = {
 };
 
 const offices = [
-  { city: 'Jaipur', address: 'C-Scheme, Jaipur, Rajasthan', phone: '+91 98284 85111' },
-  { city: 'Surat', address: 'Athwa, Surat, Gujarat', phone: '+91 98284 85111' },
-  { city: 'Dubai', address: 'IBN Battuta - 11th Floor - Jabel Ali - Dubai - United Arab Emirates', phone: '+971 54 505 2126' },
+  { city: 'India', address: 'India Studio', phone: '+91 98284 85111', email: 'studio@wanderlustarchitects.com' },
+  { city: 'UAE', address: 'IBN Battuta - 11th Floor - Jabel Ali - Dubai - United Arab Emirates', phone: '+971 54 505 2126', email: 'studio@wanderlustarchitects.com' },
 ];
 
 const serviceOptions: Option[] = [
-  { value: 'architecture', label: 'Architecture Design', description: 'Planning, facade, and buildable design direction' },
-  { value: 'interiors', label: 'Interior Design', description: 'Spatial planning, materials, and styling' },
-  { value: 'fitout', label: 'Office Fit-Outs', description: 'Execution-led workplace and retail delivery' },
-  { value: 'delivery', label: 'Project Delivery', description: 'Documentation, BOQs, and site coordination' },
-  { value: 'landscape', label: 'Landscape Design', description: 'Outdoor planning and site aesthetics' },
+  { value: 'architecture', label: 'Architecture', description: 'Planning, facade, and buildable design direction' },
+  { value: 'interior', label: 'Interior', description: 'Spatial planning, materials, and styling' },
+  { value: 'landscape', label: 'Landscape', description: 'Outdoor planning and site aesthetics' },
   { value: 'documentation', label: 'Building Documentation', description: 'Tender-ready and site-ready drawing sets' },
+  { value: 'visualization', label: '3D Visualization', description: 'Render-ready visuals for approvals and presentation' },
 ];
 
 const projectTypeOptions: Option[] = [
@@ -244,10 +242,18 @@ export default function ContactPage() {
             title='Build your brief with guided selections before speaking to the studio.'
             description='Share your contact details, choose the project type, and define the property scope through quick selections instead of long manual typing.'
           />
+          <div className='mt-8 grid gap-4 border-t border-mist pt-6 sm:grid-cols-2'>
+            <a href='mailto:studio@wanderlustarchitects.com' className='rounded-lg border border-mist bg-neutral-50 px-5 py-4 text-sm text-iron transition hover:border-ink hover:text-ink'>
+              studio@wanderlustarchitects.com
+            </a>
+            <a href='tel:+919828485111' className='rounded-lg border border-mist bg-neutral-50 px-5 py-4 text-sm text-iron transition hover:border-ink hover:text-ink'>
+              +91 98284 85111
+            </a>
+          </div>
         </section>
       </Reveal>
 
-      <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+      <div className='grid gap-4 md:grid-cols-2'>
         {offices.map((office, index) => (
           <Reveal key={office.city} delay={index * 0.05}>
             <article className='h-full rounded-xl border border-mist bg-white p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-ink'>
@@ -255,6 +261,9 @@ export default function ContactPage() {
               <p className='mt-2 text-sm text-iron'>{office.address}</p>
               <a href={`tel:${office.phone.replace(/\s+/g, '')}`} className='mt-3 block text-xs uppercase tracking-[0.16em] text-iron hover:text-ink'>
                 {office.phone}
+              </a>
+              <a href={`mailto:${office.email}`} className='mt-2 block text-xs uppercase tracking-[0.16em] text-iron hover:text-ink'>
+                {office.email}
               </a>
             </article>
           </Reveal>

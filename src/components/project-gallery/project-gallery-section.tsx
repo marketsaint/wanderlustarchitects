@@ -7,7 +7,7 @@ import { projects } from '../../lib/projects';
 
 const GRID_COLUMNS = 5;
 const CARD_SIZE = 220;
-const GAP = 10;
+const GAP = 3;
 const VIEWPORT_PADDING = 8;
 const MAX_ZOOM_COLUMNS = 3;
 const PANEL_FALLBACK_HEIGHT = 280;
@@ -417,9 +417,10 @@ export function ProjectGallerySection() {
           >
             <LayoutGroup id='wanderlust-project-canvas'>
               <div
-                className='grid gap-[10px]'
+                className='grid'
                 style={{
                   gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+                  gap: `${GAP}px`,
                 }}
               >
                 {canvasItems.map((item) => {

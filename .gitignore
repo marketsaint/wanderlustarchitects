@@ -6,3 +6,5 @@ devserver.err
 
 .DS_Store
 Thumbs.db
+
+.vercel

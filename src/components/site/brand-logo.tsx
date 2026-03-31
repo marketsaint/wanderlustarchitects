@@ -18,9 +18,21 @@ export function BrandLogo({
   text = 'WANDERLUST ARCHITECTS',
 }: BrandLogoProps) {
   return (
-    <span className={cn('inline-flex items-center gap-3', className)}>
-      <img src={iconSrc} alt='' aria-hidden='true' className={cn('h-12 w-auto object-contain', iconClassName, iconImageClassName)} />
-      <span className={cn('font-[Montserrat] text-xs font-semibold uppercase tracking-[0.2em] text-black', textClassName)}>{text}</span>
+    <span className={cn('inline-flex items-center justify-center gap-3 align-middle', className)}>
+      <img
+        src={iconSrc}
+        alt=''
+        aria-hidden='true'
+        className={cn('block h-12 w-auto shrink-0 self-center object-contain align-middle', iconClassName, iconImageClassName)}
+      />
+      <span
+        className={cn(
+          'inline-flex items-center self-center font-[Montserrat] text-xs font-semibold uppercase leading-none tracking-[0.2em] text-black',
+          textClassName,
+        )}
+      >
+        {text}
+      </span>
     </span>
   );
 }

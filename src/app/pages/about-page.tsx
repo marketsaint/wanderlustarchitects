@@ -1,8 +1,9 @@
 import { siteImages, teamMembers } from '@/lib/site-content';
 import { Reveal, SectionTitle } from '@/components/site/ui';
-import { HomeTestimonialsSection } from '@/components/site/home-sections';
 
 export default function AboutPage() {
+  const leadershipTeam = teamMembers.slice(0, 2);
+
   return (
     <div className='mx-auto max-w-7xl space-y-24 px-4 py-16 sm:px-6 lg:px-10 lg:py-24'>
       <Reveal>
@@ -39,24 +40,29 @@ export default function AboutPage() {
 
       <section className='space-y-8'>
         <SectionTitle eyebrow='Team' title='Leadership focused on design quality and project outcomes.' />
-        <div className='grid gap-5 sm:grid-cols-2 lg:grid-cols-3'>
-          {teamMembers.map((member, index) => (
+        <div className='grid max-w-4xl gap-6 sm:grid-cols-2'>
+          {leadershipTeam.map((member, index) => (
             <Reveal key={member.name} delay={index * 0.06}>
-              <article className='h-full rounded-xl border border-mist bg-white p-6 shadow-soft'>
-                <div className='relative mb-4 h-72 overflow-hidden rounded-md border border-mist md:h-80'>
-                  <img src={member.image} alt={member.name} className='h-full w-full object-cover object-top grayscale' />
-                </div>
-                <h3 className='text-2xl'>{member.name}</h3>
-                <p className='text-xs uppercase tracking-[0.2em] text-iron'>{member.role}</p>
-              </article>
+              <a
+                href={member.linkedin}
+                target='_blank'
+                rel='noreferrer'
+                className='block h-full border border-mist bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-ink'
+              >
+                <article className='h-full'>
+                  <div className='relative mb-5 h-[28rem] overflow-hidden border border-mist md:h-[31rem]'>
+                    <img src={member.image} alt={member.name} className='h-full w-full object-cover object-top grayscale' />
+                  </div>
+                  <div className='space-y-3'>
+                    <p className='text-[10px] uppercase tracking-[0.24em] text-iron'>LinkedIn</p>
+                    <h3 className='font-[Cormorant_Garamond] text-[2.35rem] leading-[0.92]'>{member.displayName ?? member.name}</h3>
+                    <p className='text-xs uppercase tracking-[0.2em] text-iron'>{member.role}</p>
+                  </div>
+                </article>
+              </a>
             </Reveal>
           ))}
         </div>
-      </section>
-
-      <section className='space-y-6'>
-        <SectionTitle eyebrow='Client Voice' title='Trusted by private and commercial clients across India.' />
-        <HomeTestimonialsSection />
       </section>
     </div>
   );
