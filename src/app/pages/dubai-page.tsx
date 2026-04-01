@@ -104,6 +104,13 @@ const serviceDeliverables: Record<string, string[]> = {
   'Project Delivery': ['BOQ-linked coordination', 'Site review rhythm', 'Vendor, contractor, and snag-list follow-through'],
 };
 
+const dubaiServiceImages: Record<string, string> = {
+  'Architecture Design': siteImages.serviceHero.Architecture,
+  'Interior Design': siteImages.serviceHero.Interior,
+  'Office Fit-Outs': siteImages.hero,
+  'Project Delivery': siteImages.dubaiHero,
+};
+
 const signatureProjects = projects.slice(0, 4);
 
 function DubaiPortfolioCard({ project, compact = false }: { project: ProjectRecord; compact?: boolean }) {
@@ -308,7 +315,7 @@ export default function DubaiPage() {
 
             <div className='grid gap-5 md:grid-cols-2 lg:h-full lg:auto-rows-fr'>
               {dubaiServices.map((service, index) => {
-                const image = siteImages.serviceHero[service.title as keyof typeof siteImages.serviceHero];
+                const image = dubaiServiceImages[service.title] ?? siteImages.hero;
 
                 return (
                   <Reveal key={service.title} delay={index * 0.05} className='h-full'>

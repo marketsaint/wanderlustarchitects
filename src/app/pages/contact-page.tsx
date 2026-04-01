@@ -89,6 +89,18 @@ function getOptionLabel(options: Option[], value: string) {
   return options.find((option) => option.value === value)?.label ?? '';
 }
 
+function formatDisplayPhone(phone: string) {
+  if (phone === '+971545052126') {
+    return '+971 54 505 2126';
+  }
+
+  if (phone === '+919828485111') {
+    return '+91 98284 85111';
+  }
+
+  return phone;
+}
+
 function FieldShell({
   label,
   optional = false,
@@ -197,6 +209,8 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const activeRegion = useMemo(() => getRegionFromPathname(location.pathname), [location.pathname]);
   const whatsappContact = useMemo(() => getContactByRegion(activeRegion), [activeRegion]);
+  const activePhoneDisplay = useMemo(() => formatDisplayPhone(whatsappContact.phone), [whatsappContact.phone]);
+  const activeStudioLabel = activeRegion === 'AE' ? 'UAE Studio' : 'India Studio';
 
   const onChange = (field: keyof typeof initialForm, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -243,31 +257,48 @@ export default function ContactPage() {
   };
 
   const whatsappHref = useMemo(() => {
-    const lines = [
-      'Hello Wanderlust Architects, I would like to share my project brief.',
-      '',
-      `Name: ${form.name || '-'}`,
-      `Email: ${form.email || '-'}`,
-      `Phone: ${form.phone || '-'}`,
-      `Project Location: ${form.location || '-'}`,
-      `Service Needed: ${getOptionLabel(serviceOptions, form.service) || '-'}`,
-      `Type Of Project: ${getOptionLabel(projectTypeOptions, form.projectType) || '-'}`,
-      `Intent: ${getOptionLabel(projectIntentOptions, form.projectIntent) || '-'}`,
-    ];
+    const lines = ['Hello Wanderlust Architects,', '', 'I would like to share my project brief.', ''];
+    const details = [
+      ['Name', form.name],
+      ['Email', form.email],
+      ['Phone', form.phone],
+      ['Project Location', form.location],
+      ['Service Needed', getOptionLabel(serviceOptions, form.service)],
+      ['Type Of Project', getOptionLabel(projectTypeOptions, form.projectType)],
+      ['Intent', getOptionLabel(projectIntentOptions, form.projectIntent)],
+    ] as const;
+
+    details.forEach(([label, value]) => {
+      if (value?.trim()) {
+        lines.push(`${label}: ${value}`);
+      }
+    });
 
     if (form.projectType === 'residential') {
-      lines.push(`Type Of Residence: ${getOptionLabel(residenceTypeOptions, form.residenceType) || '-'}`);
+      const residenceType = getOptionLabel(residenceTypeOptions, form.residenceType);
+      if (residenceType) {
+        lines.push(`Type Of Residence: ${residenceType}`);
+      }
     }
 
     if (form.projectType === 'residential' && form.residenceType === 'flat-apartment') {
-      lines.push(`Apartment Configuration: ${getOptionLabel(apartmentConfigOptions, form.apartmentConfig) || '-'}`);
+      const apartmentConfig = getOptionLabel(apartmentConfigOptions, form.apartmentConfig);
+      if (apartmentConfig) {
+        lines.push(`Apartment Configuration: ${apartmentConfig}`);
+      }
     }
 
     if (form.projectType === 'commercial') {
-      lines.push(`Commercial Property Type: ${getOptionLabel(commercialTypeOptions, form.commercialType) || '-'}`);
+      const commercialType = getOptionLabel(commercialTypeOptions, form.commercialType);
+      if (commercialType) {
+        lines.push(`Commercial Property Type: ${commercialType}`);
+      }
     }
 
-    lines.push(`Approximate Area: ${getOptionLabel(areaOptions, form.areaBand) || '-'}`);
+    const areaBand = getOptionLabel(areaOptions, form.areaBand);
+    if (areaBand) {
+      lines.push(`Approximate Area: ${areaBand}`);
+    }
 
     if (form.message.trim()) {
       lines.push('', 'Project Notes:', form.message.trim());
@@ -298,8 +329,11 @@ export default function ContactPage() {
             <a href='mailto:studio@wanderlustarchitects.com' className='rounded-lg border border-mist bg-neutral-50 px-5 py-4 text-sm text-iron transition hover:border-ink hover:text-ink'>
               studio@wanderlustarchitects.com
             </a>
-            <a href='tel:+919828485111' className='rounded-lg border border-mist bg-neutral-50 px-5 py-4 text-sm text-iron transition hover:border-ink hover:text-ink'>
-              +91 98284 85111
+            <a
+              href={`tel:${whatsappContact.phone}`}
+              className='rounded-lg border border-mist bg-neutral-50 px-5 py-4 text-sm text-iron transition hover:border-ink hover:text-ink'
+            >
+              {activeStudioLabel}: {activePhoneDisplay}
             </a>
           </div>
         </section>
