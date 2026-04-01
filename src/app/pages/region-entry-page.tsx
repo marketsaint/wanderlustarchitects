@@ -127,20 +127,16 @@ export default function RegionEntryPage() {
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className='contents text-center'>
-                <div className='flex items-start justify-center pt-3'>
-                  <div className='space-y-5'>
+                <div className='flex items-start justify-center pt-2 sm:pt-4'>
+                  <div className='space-y-3 sm:space-y-4'>
                     <p className='font-[Montserrat] text-[0.95rem] font-semibold uppercase tracking-[0.34em] text-white sm:text-[1.15rem]'>
                       Wanderlust Architects
                     </p>
                   </div>
                 </div>
 
-                <div className='flex flex-col items-center justify-center gap-8 sm:gap-10'>
-                  <div className='space-y-4'>
-                    <p className='text-[10px] uppercase tracking-[0.36em] text-white/52 sm:text-xs'>Select Region</p>
-                    <p className='text-[clamp(2.8rem,6.5vw,5.8rem)] leading-[0.88] text-white'>IND / UAE</p>
-                  </div>
-                  <div className='inline-flex items-center border border-white/20 bg-white/6 p-1.5'>
+                <div className='flex flex-col items-center justify-center gap-6 sm:gap-8'>
+                  <div className='inline-flex items-center border border-white/20 bg-white/6 p-1.5 sm:p-2'>
                     {[
                       { key: 'india', label: 'IND' },
                       { key: 'dubai', label: 'UAE' },
@@ -153,7 +149,7 @@ export default function RegionEntryPage() {
                           type='button'
                           onClick={() => handleSelect(option.key as SiteRegionKey)}
                           className={cn(
-                            'px-6 py-3 text-sm uppercase tracking-[0.28em] transition-colors sm:px-8',
+                            'min-w-[7rem] px-6 py-3 text-sm uppercase tracking-[0.28em] transition-colors sm:min-w-[8.5rem] sm:px-8 sm:text-base',
                             isActive ? 'bg-white text-black' : 'text-white/72 hover:bg-white/10 hover:text-white',
                           )}
                         >
@@ -164,8 +160,8 @@ export default function RegionEntryPage() {
                   </div>
                 </div>
 
-                <div className='flex items-end justify-center'>
-                  <div className='h-px w-36 bg-white/18' />
+                <div className='flex items-end justify-center pb-1 sm:pb-2'>
+                  <div className='h-px w-44 bg-white/18' />
                 </div>
               </div>
             </motion.div>

@@ -1,6 +1,8 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router';
 import { cn } from '@/app/components/ui/utils';
 import { Reveal, Input, SectionTitle, Textarea, Button } from '@/components/site/ui';
+import { getContactByRegion, getRegionFromPathname } from '@/lib/site-content';
 
 type Option = {
   value: string;
@@ -82,6 +84,10 @@ const initialForm = {
   areaBand: '',
   message: '',
 };
+
+function getOptionLabel(options: Option[], value: string) {
+  return options.find((option) => option.value === value)?.label ?? '';
+}
 
 function FieldShell({
   label,
@@ -185,9 +191,12 @@ function OptionChips({
 }
 
 export default function ContactPage() {
+  const location = useLocation();
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const activeRegion = useMemo(() => getRegionFromPathname(location.pathname), [location.pathname]);
+  const whatsappContact = useMemo(() => getContactByRegion(activeRegion), [activeRegion]);
 
   const onChange = (field: keyof typeof initialForm, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -231,6 +240,49 @@ export default function ContactPage() {
       setSubmitted(true);
       setForm(initialForm);
     }, 500);
+  };
+
+  const whatsappHref = useMemo(() => {
+    const lines = [
+      'Hello Wanderlust Architects, I would like to share my project brief.',
+      '',
+      `Name: ${form.name || '-'}`,
+      `Email: ${form.email || '-'}`,
+      `Phone: ${form.phone || '-'}`,
+      `Project Location: ${form.location || '-'}`,
+      `Service Needed: ${getOptionLabel(serviceOptions, form.service) || '-'}`,
+      `Type Of Project: ${getOptionLabel(projectTypeOptions, form.projectType) || '-'}`,
+      `Intent: ${getOptionLabel(projectIntentOptions, form.projectIntent) || '-'}`,
+    ];
+
+    if (form.projectType === 'residential') {
+      lines.push(`Type Of Residence: ${getOptionLabel(residenceTypeOptions, form.residenceType) || '-'}`);
+    }
+
+    if (form.projectType === 'residential' && form.residenceType === 'flat-apartment') {
+      lines.push(`Apartment Configuration: ${getOptionLabel(apartmentConfigOptions, form.apartmentConfig) || '-'}`);
+    }
+
+    if (form.projectType === 'commercial') {
+      lines.push(`Commercial Property Type: ${getOptionLabel(commercialTypeOptions, form.commercialType) || '-'}`);
+    }
+
+    lines.push(`Approximate Area: ${getOptionLabel(areaOptions, form.areaBand) || '-'}`);
+
+    if (form.message.trim()) {
+      lines.push('', 'Project Notes:', form.message.trim());
+    }
+
+    return `${whatsappContact.whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`;
+  }, [form, whatsappContact.whatsapp]);
+
+  const handleWhatsappClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const validation = validate();
+    setErrors(validation);
+
+    if (Object.keys(validation).length > 0) {
+      event.preventDefault();
+    }
   };
 
   return (
@@ -371,7 +423,10 @@ export default function ContactPage() {
           <div className='flex flex-wrap items-center gap-4'>
             <Button type='submit'>Send Inquiry</Button>
             <a
-              href='https://wa.me/919828485111'
+              href={whatsappHref}
+              onClick={handleWhatsappClick}
+              target='_blank'
+              rel='noreferrer'
               className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'
             >
               WhatsApp us
