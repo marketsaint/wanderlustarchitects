@@ -135,7 +135,8 @@ export default function RegionEntryPage() {
                   </div>
                 </div>
 
-                <div className='flex flex-col items-center justify-center gap-6 sm:gap-8'>
+                <div className='flex flex-col items-center justify-center gap-5 sm:gap-7'>
+                  <p className='text-[11px] uppercase tracking-[0.36em] text-white/58 sm:text-xs'>Select Region</p>
                   <div className='inline-flex items-center border border-white/20 bg-white/6 p-1.5 sm:p-2'>
                     {[
                       { key: 'india', label: 'IND' },

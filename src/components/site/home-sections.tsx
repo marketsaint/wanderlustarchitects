@@ -391,27 +391,6 @@ export function HomeServicesSection() {
       </div>
 
       <div className='mt-6 grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]'>
-        <div className='grid gap-2 self-start'>
-          {services.map((service, index) => (
-            <button
-              key={service.title}
-              type='button'
-              onClick={() => setActive(service.title)}
-              className={cn(
-                'grid grid-cols-[2.1rem_minmax(0,1fr)] items-center gap-3 border px-4 py-4 text-left transition-colors duration-300',
-                service.title === active
-                  ? 'border-black bg-black text-white'
-                  : 'border-black/10 bg-white text-black hover:border-black/30 hover:bg-[#faf8f4]',
-              )}
-            >
-              <span className={cn('text-[10px] uppercase tracking-[0.22em]', service.title === active ? 'text-[#d8c2a0]/84' : 'text-iron')}>
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <span className='text-xs uppercase tracking-[0.24em]'>{service.title}</span>
-            </button>
-          ))}
-        </div>
-
         <AnimatePresence mode='wait'>
           <motion.div
             key={selected.title}
@@ -419,10 +398,36 @@ export function HomeServicesSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.3 }}
-            className='grid gap-4'
+            className='grid gap-4 lg:col-span-2'
           >
-            <div className='grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]'>
-              <div className='relative min-h-[24rem] overflow-hidden border border-black/10 bg-black'>
+            <div className='grid gap-4 lg:grid-cols-[18rem_minmax(0,1fr)_18rem] lg:items-stretch'>
+              <div className='grid gap-2 lg:h-full lg:grid-rows-5'>
+                {services.map((service, index) => (
+                  <button
+                    key={service.title}
+                    type='button'
+                    onClick={() => setActive(service.title)}
+                    className={cn(
+                      'grid h-full min-h-[4.9rem] grid-cols-[2.1rem_minmax(0,1fr)] items-center gap-3 border px-4 py-4 text-left transition-colors duration-300',
+                      service.title === active
+                        ? 'border-black bg-black text-white'
+                        : 'border-black/10 bg-white text-black hover:border-black/30 hover:bg-[#faf8f4]',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'text-[10px] uppercase tracking-[0.22em]',
+                        service.title === active ? 'text-[#d8c2a0]/84' : 'text-iron',
+                      )}
+                    >
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span className='text-xs uppercase tracking-[0.24em]'>{service.title}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className='relative min-h-[30rem] overflow-hidden border border-black/10 bg-black'>
                 <img src={selected.image} alt={selected.title} className='h-full w-full object-cover grayscale' />
                 <div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.06)_0%,rgba(0,0,0,0.74)_100%)]' />
                 <div className='absolute inset-x-0 bottom-0 p-6 sm:p-7'>
@@ -432,27 +437,33 @@ export function HomeServicesSection() {
                 </div>
               </div>
 
-              <div className='grid gap-4 border border-black/10 bg-[#f7f5f1] p-6'>
-                <div className='grid gap-4 border-b border-black/10 pb-5'>
+              <div className='grid gap-2 lg:h-full lg:grid-rows-5'>
+                <div className='flex min-h-[4.9rem] flex-col justify-center border border-black/10 bg-[#f7f5f1] px-6 py-4'>
                   <div>
                     <p className='text-[10px] uppercase tracking-[0.3em] text-iron'>Service Summary</p>
-                    <h4 className='mt-3 max-w-[10ch] font-[Cormorant_Garamond] text-[2.05rem] leading-[0.94] text-black sm:text-[2.2rem]'>
+                    <h4 className='mt-2 max-w-[10ch] font-[Cormorant_Garamond] text-[1.95rem] leading-[0.94] text-black sm:text-[2.1rem]'>
                       {selected.title}
                     </h4>
                   </div>
-                  <div className='w-full max-w-[12rem] border border-black/10 bg-white px-4 py-3'>
+                </div>
+                <div className='flex min-h-[4.9rem] flex-col justify-center border border-black/10 bg-white px-6 py-4'>
+                  <div>
                     <p className='text-[10px] uppercase tracking-[0.24em] text-iron'>Outcome</p>
                     <p className='mt-2 font-[Cormorant_Garamond] text-[1.45rem] leading-none text-black'>Build-ready</p>
                   </div>
                 </div>
-
-                <ul className='grid gap-3'>
-                  {selected.points.map((point) => (
-                    <li key={point} className='border border-black/10 bg-white px-4 py-4 text-sm leading-7 text-iron'>
-                      {point}
-                    </li>
-                  ))}
-                </ul>
+                {selected.points.map((point) => (
+                  <div key={point} className='flex min-h-[4.9rem] items-center border border-black/10 bg-white px-6 py-4 text-sm leading-7 text-iron'>
+                    <p>{point}</p>
+                  </div>
+                ))}
+                {selected.points.length < services.length - 2
+                  ? Array.from({ length: services.length - 2 - selected.points.length }).map((_, index) => (
+                      <div key={`filler-${index}`} className='flex min-h-[4.9rem] items-center border border-black/10 bg-[#f7f5f1] px-6 py-4 text-sm leading-7 text-iron/65'>
+                        Structured scope alignment
+                      </div>
+                    ))
+                  : null}
               </div>
             </div>
           </motion.div>
