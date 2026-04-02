@@ -10,7 +10,6 @@ import DubaiPage from './pages/dubai-page';
 import RegionEntryPage from './pages/region-entry-page';
 import ProjectsPage from './pages/projects-page';
 import ProjectDetailPage from './pages/project-detail-page';
-import RemotePage from './pages/remote-page';
 import NotFoundPage from './pages/not-found-page';
 
 export const router = createBrowserRouter([
@@ -61,10 +60,6 @@ export const router = createBrowserRouter([
       {
         path: 'projects',
         Component: ProjectsPage,
-      },
-      {
-        path: 'remote',
-        Component: RemotePage,
       },
       {
         path: '*',
