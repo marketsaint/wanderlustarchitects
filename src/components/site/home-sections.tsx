@@ -660,7 +660,10 @@ export function HomeStatsSection() {
   return (
     <div className='grid gap-6 border border-mist bg-white p-8 shadow-soft sm:grid-cols-2 lg:grid-cols-4'>
       {stats.map((stat) => (
-        <div key={stat.label} className='border-b border-mist pb-5 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6 last:border-none'>
+        <div
+          key={stat.label}
+          className='flex flex-col items-center justify-center border-b border-mist pb-5 text-center lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6 last:border-none'
+        >
           <p className='font-[Cormorant_Garamond] text-[2.6rem] leading-none text-black'>{stat.value}</p>
           <p className='mt-2 text-xs uppercase tracking-[0.2em] text-iron'>{stat.label}</p>
         </div>

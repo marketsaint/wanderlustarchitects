@@ -69,6 +69,15 @@ img {
   border-radius: 0 !important;
 }
 
+.whatsapp-fab,
+.whatsapp-fab::before,
+.whatsapp-fab::after,
+.whatsapp-fab *,
+.whatsapp-fab *::before,
+.whatsapp-fab *::after {
+  border-radius: 9999px !important;
+}
+
 .prose h2,
 .prose h3 {
   scroll-margin-top: 6rem;

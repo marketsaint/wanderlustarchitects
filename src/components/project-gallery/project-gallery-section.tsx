@@ -7,8 +7,8 @@ import { projects } from '../../lib/projects';
 
 const GRID_COLUMNS = 5;
 const CARD_SIZE = 220;
-const GAP = 3;
-const VIEWPORT_PADDING = 8;
+const GAP = 2;
+const VIEWPORT_PADDING = 6;
 const MAX_ZOOM_COLUMNS = 3;
 const PANEL_FALLBACK_HEIGHT = 280;
 

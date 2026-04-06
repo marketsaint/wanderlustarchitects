@@ -317,14 +317,26 @@ export default function DubaiPage() {
               {dubaiServices.map((service, index) => {
                 const image = dubaiServiceImages[service.title] ?? siteImages.hero;
 
-                return (
-                  <Reveal key={service.title} delay={index * 0.05} className='h-full'>
-                    <article className='flex h-full flex-col overflow-hidden rounded-[26px] border border-[#dcc6a3]/55 bg-white shadow-[0_18px_54px_rgba(49,28,10,0.07)]'>
-                      <div className='relative h-44 overflow-hidden lg:h-36 xl:h-40'>
-                        <img src={image} alt={service.title} className='h-full w-full object-cover grayscale transition duration-700 hover:scale-105 hover:grayscale-0' />
-                      </div>
-                      <div className='flex flex-1 flex-col gap-3 p-4 lg:p-4'>
-                        <h3 className='text-2xl leading-tight text-[#17110b]'>{service.title}</h3>
+        return (
+          <Reveal key={service.title} delay={index * 0.05} className='h-full'>
+            <article className='flex h-full flex-col overflow-hidden rounded-[26px] border border-[#dcc6a3]/55 bg-white shadow-[0_18px_54px_rgba(49,28,10,0.07)]'>
+              <div className='relative h-44 overflow-hidden lg:h-36 xl:h-40'>
+                <img
+                  src={image}
+                  alt={service.title}
+                  className='h-full w-full object-cover grayscale transition duration-700 hover:scale-105 hover:grayscale-0'
+                  onError={(event) => {
+                    const target = event.currentTarget;
+                    if (target.dataset.fallbackApplied === 'true') {
+                      return;
+                    }
+                    target.dataset.fallbackApplied = 'true';
+                    target.src = siteImages.hero;
+                  }}
+                />
+              </div>
+              <div className='flex flex-1 flex-col gap-3 p-4 lg:p-4'>
+                <h3 className='text-2xl leading-tight text-[#17110b]'>{service.title}</h3>
                         <div className='mt-auto space-y-1.5'>
                           {(serviceDeliverables[service.title] ?? []).map((item) => (
                             <div key={item} className='flex items-center gap-3 text-sm text-[#5b4c38]'>

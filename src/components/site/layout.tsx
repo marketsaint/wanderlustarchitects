@@ -136,15 +136,15 @@ function Header({
       <Container className={cn('relative', isProjectsRoute && 'pointer-events-auto')}>
         <div
           className={cn(
-            'flex min-h-[62px] items-center justify-between gap-2 rounded-[22px] px-3 py-2 backdrop-blur-xl sm:gap-3 sm:px-5 xl:hidden',
+            'flex min-h-[56px] items-center justify-between gap-2 rounded-[22px] px-3 py-1.5 backdrop-blur-xl sm:gap-3 sm:px-5 xl:hidden',
             useLightTheme
-              ? 'border border-white/24 bg-black/34 shadow-[0_16px_42px_rgba(0,0,0,0.38)]'
-              : 'border border-black/15 bg-white/68 shadow-[0_14px_36px_rgba(0,0,0,0.14)]',
+              ? 'bg-black/34 shadow-[0_16px_42px_rgba(0,0,0,0.38)]'
+              : 'bg-white/68 shadow-[0_14px_36px_rgba(0,0,0,0.14)]',
           )}
         >
           <Link
             to='/projects'
-            className='flex min-w-0 max-w-[calc(100%-88px)] flex-1 items-center overflow-hidden pl-1 pr-2 sm:pl-2 sm:pr-3 xl:max-w-none xl:flex-none xl:pr-5'
+            className='flex min-w-0 max-w-[calc(100%-88px)] flex-1 items-center overflow-hidden pl-2 pr-2 sm:pl-3 sm:pr-3 xl:max-w-none xl:flex-none xl:pr-5'
             aria-label='Wanderlust Architects projects'
           >
             <BrandLogo
@@ -183,10 +183,10 @@ function Header({
         <div className='hidden xl:flex xl:justify-center'>
           <div
                   className={cn(
-                    'mx-auto w-full overflow-hidden rounded-[24px] border px-3 py-2 backdrop-blur-xl transition-[max-width,background-color,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                    'mx-auto w-full overflow-hidden rounded-[24px] px-3 py-1.5 backdrop-blur-xl transition-[max-width,background-color,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
               useLightTheme
-                ? 'border border-white/24 bg-black/34 shadow-[0_16px_42px_rgba(0,0,0,0.38)]'
-                : 'border border-black/15 bg-white/68 shadow-[0_14px_36px_rgba(0,0,0,0.14)]',
+                ? 'bg-black/34 shadow-[0_16px_42px_rgba(0,0,0,0.38)]'
+                : 'bg-white/68 shadow-[0_14px_36px_rgba(0,0,0,0.14)]',
             )}
             style={{
               maxWidth: desktopExpanded ? '1220px' : '470px',
@@ -196,10 +196,10 @@ function Header({
             onFocusCapture={() => setDesktopExpanded(true)}
             onBlur={handleDesktopBlur}
           >
-            <div className={cn('flex min-h-[58px] items-center gap-4', desktopExpanded ? 'justify-between' : 'justify-center')}>
+            <div className={cn('flex min-h-[52px] items-center gap-4', desktopExpanded ? 'justify-between' : 'justify-center')}>
               <Link
                 to='/projects'
-                className={cn('flex min-w-0 shrink-0 items-center pl-3', desktopExpanded ? 'pr-3' : 'pr-3')}
+                className='flex min-w-0 shrink-0 items-center justify-center pl-4 pr-4'
                 aria-label='Wanderlust Architects projects'
               >
                 <BrandLogo
@@ -310,15 +310,15 @@ function formatDisplayPhone(phone: string) {
 
 function FooterPanel({ contact }: { contact: { phone: string; email: string; whatsapp: string } }) {
   return (
-    <Container className='grid gap-0 py-14 lg:grid-cols-[1.35fr_0.9fr_0.95fr] lg:items-stretch'>
-      <div className='flex min-h-[360px] flex-col justify-between border-t border-mist px-0 py-10 lg:border-b lg:pr-10'>
-        <div className='space-y-6'>
+    <Container className='grid gap-10 py-12 lg:grid-cols-[1.2fr_0.78fr_0.92fr] lg:gap-12'>
+      <div className='space-y-7 border-t border-mist px-0 py-8 lg:pr-10'>
+        <div className='space-y-5'>
           <BrandLogo className='gap-3' iconClassName='h-10 w-10' textClassName='text-xs tracking-[0.22em]' />
           <h3 className='max-w-xl text-4xl leading-tight'>
             Premium spatial design for residences, offices, hospitality, and high-precision project execution.
           </h3>
         </div>
-        <div className='space-y-4 pt-8'>
+        <div className='space-y-4'>
           <div className='flex flex-wrap gap-3'>
             <Link to='/contact' className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'>
               Book Consultation
@@ -347,8 +347,8 @@ function FooterPanel({ contact }: { contact: { phone: string; email: string; wha
           </div>
         </div>
       </div>
-      <div className='flex min-h-[360px] flex-col justify-between border-t border-mist py-10 lg:border-b lg:border-l lg:px-10'>
-        <div className='space-y-6'>
+      <div className='space-y-6 border-t border-mist py-8 lg:border-l lg:px-10'>
+        <div className='space-y-5'>
           <p className='text-xs uppercase tracking-[0.2em] text-iron'>Studios</p>
           <div className='space-y-8'>
             {siteOffices.map((office) => (
@@ -366,8 +366,8 @@ function FooterPanel({ contact }: { contact: { phone: string; email: string; wha
         </div>
         <p className='max-w-[16rem] text-xs uppercase tracking-[0.18em] text-iron'>India and UAE coordination with one design language and region-specific execution.</p>
       </div>
-      <div className='flex min-h-[360px] flex-col justify-between border-y border-mist py-10 lg:border-l lg:px-10'>
-        <div className='space-y-6'>
+      <div className='space-y-6 border-y border-mist py-8 lg:border-l lg:px-10'>
+        <div className='space-y-5'>
           <p className='text-xs uppercase tracking-[0.2em] text-iron'>Connect</p>
           <div className='space-y-4'>
             <Link to='/projects' className='block text-lg hover:text-iron'>
@@ -378,7 +378,7 @@ function FooterPanel({ contact }: { contact: { phone: string; email: string; wha
             </Link>
           </div>
         </div>
-        <div className='space-y-3'>
+        <div className='space-y-3 border-t border-mist pt-6'>
           <a href={`mailto:${contact.email}`} className='block text-sm hover:text-iron'>
             {contact.email}
           </a>

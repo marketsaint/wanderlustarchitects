@@ -11,8 +11,20 @@ type Option = {
 };
 
 const offices = [
-  { city: 'India', address: 'India Studio', phone: '+91 98284 85111', email: 'studio@wanderlustarchitects.com' },
-  { city: 'UAE', address: 'IBN Battuta - 11th Floor - Jabel Ali - Dubai - United Arab Emirates', phone: '+971 54 505 2126', email: 'studio@wanderlustarchitects.com' },
+  {
+    city: 'India',
+    address: 'C-Scheme, Jaipur, Rajasthan, India',
+    phone: '+91 98284 85111',
+    email: 'studio@wanderlustarchitects.com',
+    mapQuery: 'C-Scheme Jaipur Rajasthan India',
+  },
+  {
+    city: 'UAE',
+    address: 'IBN Battuta - 11th Floor - Jabel Ali - Dubai - United Arab Emirates',
+    phone: '+971 54 505 2126',
+    email: 'studio@wanderlustarchitects.com',
+    mapQuery: 'IBN Battuta 11th Floor Jebel Ali Dubai United Arab Emirates',
+  },
 ];
 
 const serviceOptions: Option[] = [
@@ -257,51 +269,76 @@ export default function ContactPage() {
   };
 
   const whatsappHref = useMemo(() => {
-    const lines = ['Hello Wanderlust Architects,', '', 'I would like to share my project brief.', ''];
-    const details = [
+    const lines = ['Hello Wanderlust Architects,', '', 'I would like to discuss a new project with the studio.', ''];
+    const contactDetails = [
       ['Name', form.name],
       ['Email', form.email],
       ['Phone', form.phone],
+    ] as const;
+    const projectDetails = [
       ['Project Location', form.location],
       ['Service Needed', getOptionLabel(serviceOptions, form.service)],
       ['Type Of Project', getOptionLabel(projectTypeOptions, form.projectType)],
       ['Intent', getOptionLabel(projectIntentOptions, form.projectIntent)],
     ] as const;
 
-    details.forEach(([label, value]) => {
+    lines.push('Contact Details');
+    contactDetails.forEach(([label, value]) => {
       if (value?.trim()) {
-        lines.push(`${label}: ${value}`);
+        lines.push(`- ${label}: ${value}`);
       }
     });
+
+    const hasProjectDetails = projectDetails.some(([, value]) => value?.trim());
+    if (hasProjectDetails) {
+      lines.push('', 'Project Details');
+      projectDetails.forEach(([label, value]) => {
+        if (value?.trim()) {
+          lines.push(`- ${label}: ${value}`);
+        }
+      });
+    }
 
     if (form.projectType === 'residential') {
       const residenceType = getOptionLabel(residenceTypeOptions, form.residenceType);
       if (residenceType) {
-        lines.push(`Type Of Residence: ${residenceType}`);
+        if (!lines.includes('Project Details')) {
+          lines.push('', 'Project Details');
+        }
+        lines.push(`- Type Of Residence: ${residenceType}`);
       }
     }
 
     if (form.projectType === 'residential' && form.residenceType === 'flat-apartment') {
       const apartmentConfig = getOptionLabel(apartmentConfigOptions, form.apartmentConfig);
       if (apartmentConfig) {
-        lines.push(`Apartment Configuration: ${apartmentConfig}`);
+        if (!lines.includes('Project Details')) {
+          lines.push('', 'Project Details');
+        }
+        lines.push(`- Apartment Configuration: ${apartmentConfig}`);
       }
     }
 
     if (form.projectType === 'commercial') {
       const commercialType = getOptionLabel(commercialTypeOptions, form.commercialType);
       if (commercialType) {
-        lines.push(`Commercial Property Type: ${commercialType}`);
+        if (!lines.includes('Project Details')) {
+          lines.push('', 'Project Details');
+        }
+        lines.push(`- Commercial Property Type: ${commercialType}`);
       }
     }
 
     const areaBand = getOptionLabel(areaOptions, form.areaBand);
     if (areaBand) {
-      lines.push(`Approximate Area: ${areaBand}`);
+      if (!lines.includes('Project Details')) {
+        lines.push('', 'Project Details');
+      }
+      lines.push(`- Approximate Area: ${areaBand}`);
     }
 
     if (form.message.trim()) {
-      lines.push('', 'Project Notes:', form.message.trim());
+      lines.push('', 'Project Notes', form.message.trim());
     }
 
     return `${whatsappContact.whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`;
@@ -339,18 +376,45 @@ export default function ContactPage() {
         </section>
       </Reveal>
 
-      <div className='grid gap-4 md:grid-cols-2'>
+      <div className='grid gap-6 md:grid-cols-2'>
         {offices.map((office, index) => (
           <Reveal key={office.city} delay={index * 0.05}>
-            <article className='h-full rounded-xl border border-mist bg-white p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-ink'>
-              <h3 className='text-2xl'>{office.city}</h3>
-              <p className='mt-2 text-sm text-iron'>{office.address}</p>
-              <a href={`tel:${office.phone.replace(/\s+/g, '')}`} className='mt-3 block text-xs uppercase tracking-[0.16em] text-iron hover:text-ink'>
-                {office.phone}
-              </a>
-              <a href={`mailto:${office.email}`} className='mt-2 block text-xs uppercase tracking-[0.16em] text-iron hover:text-ink'>
-                {office.email}
-              </a>
+            <article className='grid h-full overflow-hidden border border-mist bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-ink'>
+              <div className='space-y-5 p-6'>
+                <div className='space-y-2'>
+                  <p className='text-[11px] uppercase tracking-[0.22em] text-iron'>Studio Details</p>
+                  <h3 className='text-2xl'>{office.city}</h3>
+                  <p className='text-sm leading-7 text-iron'>{office.address}</p>
+                </div>
+
+                <div className='space-y-2 border-t border-mist pt-5'>
+                  <a href={`tel:${office.phone.replace(/\s+/g, '')}`} className='block text-xs uppercase tracking-[0.16em] text-iron hover:text-ink'>
+                    {office.phone}
+                  </a>
+                  <a href={`mailto:${office.email}`} className='block text-xs uppercase tracking-[0.16em] text-iron hover:text-ink'>
+                    {office.email}
+                  </a>
+                </div>
+
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(office.mapQuery)}`}
+                  target='_blank'
+                  rel='noreferrer'
+                  className='inline-flex border border-ink px-5 py-3 text-xs uppercase tracking-[0.18em] hover:bg-ink hover:text-smoke'
+                >
+                  Open In Maps
+                </a>
+              </div>
+
+              <div className='border-t border-mist bg-neutral-100'>
+                <iframe
+                  title={`${office.city} studio map`}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(office.mapQuery)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                  className='h-[260px] w-full border-0 grayscale'
+                  loading='lazy'
+                  referrerPolicy='no-referrer-when-downgrade'
+                />
+              </div>
             </article>
           </Reveal>
         ))}
