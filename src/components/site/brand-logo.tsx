@@ -27,7 +27,7 @@ export function BrandLogo({
       />
       <span
         className={cn(
-          'inline-flex items-center self-center font-[Montserrat] text-xs font-semibold uppercase leading-none tracking-[0.2em] text-black',
+          'inline-flex items-center self-center text-[10px] font-semibold uppercase leading-none tracking-[0.28em] text-black',
           textClassName,
         )}
       >

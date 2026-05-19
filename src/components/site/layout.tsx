@@ -1,406 +1,133 @@
-import { type FocusEvent as ReactFocusEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
-import { Instagram, Linkedin, Phone } from 'lucide-react';
-import { motion } from 'motion/react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { ArrowRight, Menu, X } from 'lucide-react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router';
 import { cn } from '@/app/components/ui/utils';
-import { Container } from './ui';
 import { FloatingWhatsAppButton } from './floating-whatsapp-button';
 import { BrandLogo } from './brand-logo';
-import { RegionSwitcher } from './region-switcher';
-import { getContactByRegion, getRegionFromPathname, siteOffices, siteSocialLinks } from '@/lib/site-content';
-import { getRegionKeyFromPathname, getRegionRoute, persistSiteRegion, type SiteRegionKey } from '@/lib/site-region';
+import { Button, Container } from './ui';
+import { getContactByRegion, getRegionFromPathname, siteSocialLinks } from '@/lib/site-content';
+import { getRegionRoute, getRegionKeyFromPathname, persistSiteRegion, type SiteRegionKey } from '@/lib/site-region';
 
-const HEADER_LINKS = [
-  { href: '/about', label: 'About' },
+const PRIMARY_LINKS = [
   { href: '/projects', label: 'Projects' },
-  { href: '/blog', label: 'Blogs' },
-  { href: '/career', label: 'Career' },
+  { href: '/about', label: 'Studio' },
+  { href: '/blog', label: 'Journal' },
+  { href: '/career', label: 'Careers' },
   { href: '/contact', label: 'Contact' },
 ] as const;
 
-const HOME_PATHS = new Set(['/india', '/dubai']);
-
-function isHomePath(pathname: string) {
-  return HOME_PATHS.has(pathname);
-}
-
 function useScrollToTop() {
-  const location = useLocation();
+  const pathname = useLocation().pathname;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-  }, [location.pathname]);
+  }, [pathname]);
 }
 
-function Header({
-  activeRegion,
-  onRegionSelect,
+function NavLink({
+  href,
+  label,
+  active,
+  onClick,
 }: {
-  activeRegion: SiteRegionKey;
-  onRegionSelect: (regionKey: SiteRegionKey) => void;
+  href: string;
+  label: string;
+  active: boolean;
+  onClick?: () => void;
 }) {
-  const pathname = useLocation().pathname;
-  const [open, setOpen] = useState(false);
-  const [desktopExpanded, setDesktopExpanded] = useState(false);
-  const [isOverHero, setIsOverHero] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const headerRef = useRef<HTMLDivElement | null>(null);
-
-  const isHomeOverlay = isHomePath(pathname);
-  const isProjectsRoute = pathname === '/projects';
-  const isDubaiBrand = activeRegion === 'dubai';
-  const useLightTheme = (isHomeOverlay && isOverHero) || isProjectsRoute;
-  const homeLinkHref = getRegionRoute(activeRegion);
-
-  useEffect(() => {
-    setOpen(false);
-    setDesktopExpanded(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    const updateHeaderState = () => {
-      const hero = document.querySelector<HTMLElement>('[data-site-hero="true"]');
-      const headerHeight = headerRef.current?.offsetHeight ?? 96;
-
-      if (hero) {
-        const rect = hero.getBoundingClientRect();
-        setIsOverHero(rect.top <= headerHeight && rect.bottom > headerHeight + 20);
-      } else {
-        setIsOverHero(false);
-      }
-
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(maxScroll > 0 ? window.scrollY / maxScroll : 0);
-    };
-
-    updateHeaderState();
-    window.addEventListener('scroll', updateHeaderState, { passive: true });
-    window.addEventListener('resize', updateHeaderState);
-
-    return () => {
-      window.removeEventListener('scroll', updateHeaderState);
-      window.removeEventListener('resize', updateHeaderState);
-    };
-  }, [pathname]);
-
-  const isActiveLink = (href: string) => {
-    if (href === homeLinkHref) {
-      return isHomePath(pathname);
-    }
-
-    return pathname === href || pathname.startsWith(`${href}/`);
-  };
-
-  const desktopLinkClass = (href: string) =>
-    cn(
-      'rounded-full px-2.5 py-2 text-[10px] uppercase tracking-[0.14em] transition-colors',
-      useLightTheme
-        ? isActiveLink(href)
-          ? 'bg-black !text-white shadow-[0_10px_24px_rgba(0,0,0,0.34)]'
-          : '!text-[#f5efe3] hover:bg-white hover:!text-black'
-        : isActiveLink(href)
-          ? 'bg-white !text-black shadow-[0_10px_24px_rgba(0,0,0,0.08)]'
-          : 'text-black/70 hover:bg-black hover:!text-white',
-    );
-
-  const mobileLinkClass = (href: string) =>
-    cn(
-      'rounded-full px-3 py-2 text-xs uppercase tracking-[0.2em] transition-colors',
-      useLightTheme
-        ? isActiveLink(href)
-          ? 'bg-black !text-white shadow-[0_10px_24px_rgba(0,0,0,0.34)]'
-          : '!text-[#f5efe3] hover:bg-white hover:!text-black'
-        : isActiveLink(href)
-          ? 'bg-white !text-black shadow-[0_10px_24px_rgba(0,0,0,0.08)]'
-          : 'text-black/75 hover:bg-black hover:!text-white',
-    );
-
-  const handleDesktopBlur = (event: ReactFocusEvent<HTMLDivElement>) => {
-    const nextFocused = event.relatedTarget as Node | null;
-
-    if (!event.currentTarget.contains(nextFocused)) {
-      setDesktopExpanded(false);
-    }
-  };
-
   return (
-    <header
-      ref={headerRef}
+    <Link
+      to={href}
+      onClick={onClick}
       className={cn(
-        'z-50 pt-3 sm:pt-4',
-        isHomeOverlay || isProjectsRoute ? 'fixed inset-x-0 top-0' : 'sticky top-0',
-        isProjectsRoute && 'pointer-events-none',
+        'inline-flex items-center px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.3em] transition',
+        active ? 'bg-black text-white' : 'text-[#5e564c] hover:text-black',
       )}
     >
-      <motion.div className={cn('h-[2px] origin-left', useLightTheme ? 'bg-white/80' : 'bg-black/70')} style={{ scaleX: scrollProgress }} />
-      <Container className={cn('relative', isProjectsRoute && 'pointer-events-auto')}>
-        <div
-          className={cn(
-            'flex min-h-[56px] items-center justify-between gap-2 rounded-[22px] px-3 py-1.5 backdrop-blur-xl sm:gap-3 sm:px-5 xl:hidden',
-            useLightTheme
-              ? 'bg-black/34 shadow-[0_16px_42px_rgba(0,0,0,0.38)]'
-              : 'bg-white/68 shadow-[0_14px_36px_rgba(0,0,0,0.14)]',
-          )}
-        >
-          <Link
-            to='/projects'
-            className='flex min-w-0 max-w-[calc(100%-88px)] flex-1 items-center overflow-hidden pl-2 pr-2 sm:pl-3 sm:pr-3 xl:max-w-none xl:flex-none xl:pr-5'
-            aria-label='Wanderlust Architects projects'
-          >
-            <BrandLogo
-              className='min-w-0 gap-1.5 sm:gap-2.5'
-              iconClassName={cn('h-6 w-6 sm:h-7 sm:w-7 xl:h-8 xl:w-8', isDubaiBrand && 'rounded-full')}
-              iconImageClassName={cn(isDubaiBrand && useLightTheme && 'invert')}
-              textClassName={cn(
-                'hidden truncate text-[8px] tracking-[0.08em] min-[420px]:inline sm:text-[10px] sm:tracking-[0.14em]',
-                useLightTheme && 'text-white',
-              )}
-              iconSrc={
-                isDubaiBrand
-                  ? '/branding/wanderlust-logo-icon.png'
-                  : useLightTheme
-                    ? '/branding/wanderlust_architects_logo-icon-White.png'
-                    : '/branding/wanderlust_architects_logo-icon-Black.png'
-              }
-            />
-          </Link>
-
-          <button
-            type='button'
-            className={cn(
-              'shrink-0 rounded-full px-2.5 py-2 text-[10px] uppercase tracking-[0.2em] xl:hidden',
-              useLightTheme ? 'border border-white/35 bg-white/12 text-white' : 'border border-black/20 bg-white/74 text-black/80',
-            )}
-            onClick={() => setOpen((current) => !current)}
-            aria-expanded={open}
-            aria-controls='mobile-nav'
-            aria-label='Toggle menu'
-          >
-            Menu
-          </button>
-        </div>
-
-        <div className='hidden xl:flex xl:justify-center'>
-          <div
-                  className={cn(
-                    'mx-auto w-full overflow-hidden rounded-[24px] px-3 py-1.5 backdrop-blur-xl transition-[max-width,background-color,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-              useLightTheme
-                ? 'bg-black/34 shadow-[0_16px_42px_rgba(0,0,0,0.38)]'
-                : 'bg-white/68 shadow-[0_14px_36px_rgba(0,0,0,0.14)]',
-            )}
-            style={{
-              maxWidth: desktopExpanded ? '1220px' : '470px',
-            }}
-            onMouseEnter={() => setDesktopExpanded(true)}
-            onMouseLeave={() => setDesktopExpanded(false)}
-            onFocusCapture={() => setDesktopExpanded(true)}
-            onBlur={handleDesktopBlur}
-          >
-            <div className={cn('flex min-h-[52px] items-center gap-4', desktopExpanded ? 'justify-between' : 'justify-center')}>
-              <Link
-                to='/projects'
-                className='flex min-w-0 shrink-0 items-center justify-center pl-4 pr-4'
-                aria-label='Wanderlust Architects projects'
-              >
-                <BrandLogo
-                  className='min-w-0 items-center gap-2.5'
-                  iconClassName={cn('h-8 w-8', isDubaiBrand && 'rounded-full')}
-                  iconImageClassName={cn(isDubaiBrand && useLightTheme && 'invert')}
-                  textClassName={cn('truncate text-center text-[10px] leading-none tracking-[0.14em]', useLightTheme && 'text-white')}
-                  iconSrc={
-                    isDubaiBrand
-                      ? '/branding/wanderlust-logo-icon.png'
-                      : useLightTheme
-                        ? '/branding/wanderlust_architects_logo-icon-White.png'
-                        : '/branding/wanderlust_architects_logo-icon-Black.png'
-                  }
-                />
-              </Link>
-
-              <div className={cn('flex min-w-0 items-center gap-3', desktopExpanded ? 'ml-auto justify-end' : 'ml-0 justify-center')}>
-                <RegionSwitcher activeRegion={activeRegion} onSelect={onRegionSelect} inverted={useLightTheme} />
-
-                <div
-                  className={cn(
-                    'flex items-center overflow-hidden transition-[max-width,opacity,transform,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-                    desktopExpanded ? 'ml-2 max-w-[760px] translate-x-0 opacity-100' : 'ml-0 max-w-0 translate-x-6 opacity-0',
-                  )}
-                  aria-hidden={!desktopExpanded}
-                >
-                  <nav className={cn('flex items-center gap-2 pr-3', useLightTheme && 'text-[#f5efe3]')} aria-label='Primary'>
-                    <Link to={homeLinkHref} className={desktopLinkClass(homeLinkHref)} tabIndex={desktopExpanded ? 0 : -1}>
-                      Home
-                    </Link>
-                    {HEADER_LINKS.map((link) => (
-                      <Link key={link.href} to={link.href} className={desktopLinkClass(link.href)} tabIndex={desktopExpanded ? 0 : -1}>
-                        {link.label}
-                      </Link>
-                    ))}
-                  </nav>
-                  <Link
-                    to='/contact'
-                    tabIndex={desktopExpanded ? 0 : -1}
-                    className={cn(
-                      'shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-[10px] uppercase tracking-[0.16em] transition',
-                      useLightTheme
-                        ? 'border border-white/35 bg-white/12 !text-[#f5efe3] hover:bg-white hover:!text-black'
-                        : 'border border-black/20 bg-white/78 text-black/80 hover:bg-black hover:text-white',
-                    )}
-                  >
-                    Start Project
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <nav
-          id='mobile-nav'
-          className={cn('mt-2 grid overflow-hidden transition-all duration-300 xl:hidden', open ? 'max-h-[520px] opacity-100' : 'max-h-0 opacity-0')}
-          aria-label='Mobile'
-        >
-          <div
-            className={cn(
-              'rounded-[20px] p-4 backdrop-blur-xl',
-              useLightTheme ? 'border border-white/24 bg-black/46 shadow-[0_16px_34px_rgba(0,0,0,0.42)]' : 'border border-black/15 bg-white/74 shadow-[0_12px_30px_rgba(0,0,0,0.12)]',
-            )}
-          >
-            <div className='grid gap-3'>
-              <RegionSwitcher activeRegion={activeRegion} onSelect={onRegionSelect} inverted={useLightTheme} />
-              <Link to={homeLinkHref} onClick={() => setOpen(false)} className={mobileLinkClass(homeLinkHref)}>
-                Home
-              </Link>
-              {HEADER_LINKS.map((link) => (
-                <Link key={link.href} to={link.href} onClick={() => setOpen(false)} className={mobileLinkClass(link.href)}>
-                  {link.label}
-                </Link>
-              ))}
-              <Link
-                to='/contact'
-                onClick={() => setOpen(false)}
-                className={cn(
-                  'rounded-full px-3 py-2 text-xs uppercase tracking-[0.2em] transition-colors',
-                  useLightTheme
-                    ? 'border border-white/35 bg-white/12 !text-[#f5efe3] hover:bg-white hover:!text-black'
-                    : 'border border-black/15 bg-black text-white hover:bg-black/85',
-                )}
-              >
-                Start Project
-              </Link>
-            </div>
-          </div>
-        </nav>
-      </Container>
-    </header>
-  );
-}
-
-function formatDisplayPhone(phone: string) {
-  if (phone === '+971545052126') {
-    return '+971 54 505 2126';
-  }
-
-  if (phone === '+919828485111') {
-    return '+91 98284 85111';
-  }
-
-  return phone;
-}
-
-function FooterPanel({ contact }: { contact: { phone: string; email: string; whatsapp: string } }) {
-  return (
-    <Container className='grid gap-10 py-12 lg:grid-cols-[1.2fr_0.78fr_0.92fr] lg:gap-12'>
-      <div className='space-y-7 border-t border-mist px-0 py-8 lg:pr-10'>
-        <div className='space-y-5'>
-          <BrandLogo className='gap-3' iconClassName='h-10 w-10' textClassName='text-xs tracking-[0.22em]' />
-          <h3 className='max-w-xl text-4xl leading-tight'>
-            Premium spatial design for residences, offices, hospitality, and high-precision project execution.
-          </h3>
-        </div>
-        <div className='space-y-4'>
-          <div className='flex flex-wrap gap-3'>
-            <Link to='/contact' className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'>
-              Book Consultation
-            </Link>
-            <a href={contact.whatsapp} className='inline-flex rounded-md border border-ink px-6 py-3 text-xs uppercase tracking-[0.2em] hover:bg-ink hover:text-smoke'>
-              WhatsApp
-            </a>
-          </div>
-          <div className='flex flex-wrap gap-3'>
-            {siteSocialLinks.map((social) => {
-              const Icon = social.label === 'Instagram' ? Instagram : Linkedin;
-
-              return (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target='_blank'
-                  rel='noreferrer'
-                  className='inline-flex items-center gap-2 rounded-md border border-ink/15 bg-white/70 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-ink transition hover:bg-ink hover:text-smoke'
-                >
-                  <Icon size={14} />
-                  <span>{social.label}</span>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-      <div className='space-y-6 border-t border-mist py-8 lg:border-l lg:px-10'>
-        <div className='space-y-5'>
-          <p className='text-xs uppercase tracking-[0.2em] text-iron'>Studios</p>
-          <div className='space-y-8'>
-            {siteOffices.map((office) => (
-              <div key={office.city} className='space-y-2'>
-                <p className='text-lg'>{office.city}</p>
-                {office.phone ? (
-                  <a href={`tel:${office.phone}`} className='inline-flex items-center gap-2 text-sm text-iron transition hover:text-ink'>
-                    <Phone size={14} />
-                    <span>{office.phone}</span>
-                  </a>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </div>
-        <p className='max-w-[16rem] text-xs uppercase tracking-[0.18em] text-iron'>India and UAE coordination with one design language and region-specific execution.</p>
-      </div>
-      <div className='space-y-6 border-y border-mist py-8 lg:border-l lg:px-10'>
-        <div className='space-y-5'>
-          <p className='text-xs uppercase tracking-[0.2em] text-iron'>Connect</p>
-          <div className='space-y-4'>
-            <Link to='/projects' className='block text-lg hover:text-iron'>
-              Portfolio
-            </Link>
-            <Link to='/blog' className='block text-lg hover:text-iron'>
-              Blogs
-            </Link>
-          </div>
-        </div>
-        <div className='space-y-3 border-t border-mist pt-6'>
-          <a href={`mailto:${contact.email}`} className='block text-sm hover:text-iron'>
-            {contact.email}
-          </a>
-          <a href={`tel:${contact.phone}`} className='block text-sm hover:text-iron'>
-            {formatDisplayPhone(contact.phone)}
-          </a>
-        </div>
-      </div>
-    </Container>
+      {label}
+    </Link>
   );
 }
 
 function Footer() {
-  const pathname = useLocation().pathname;
-  const region = useMemo(() => getRegionFromPathname(pathname), [pathname]);
-  const contact = useMemo(() => getContactByRegion(region), [region]);
-
   return (
-    <footer className='mt-28 border-t border-mist bg-[#f0f0f0]'>
-      <FooterPanel contact={contact} />
-      <Container className='border-t border-mist py-6 text-xs uppercase tracking-[0.2em] text-iron'>
-        <p>Copyright {new Date().getFullYear()} Wanderlust Architects. All rights reserved.</p>
+    <footer className='border-t border-black/10 bg-[#f8f3ea]'>
+      <Container className='grid gap-10 py-12 lg:grid-cols-[0.9fr_1.1fr] lg:py-16'>
+        <div className='grid gap-5'>
+          <BrandLogo className='justify-start gap-3' iconClassName='h-8 w-auto' textClassName='text-[10px] tracking-[0.3em]' />
+          <p className='max-w-xl text-sm leading-8 text-[#5d554b]'>
+            Wanderlust Architects shapes residences, hospitality environments, branded interiors, and fit-outs across India and the UAE with a calm, editorial, delivery-aware approach.
+          </p>
+          <div className='flex flex-wrap gap-2'>
+            <Button href='mailto:studio@wanderlustarchitects.com' variant='ghost'>
+              email studio
+            </Button>
+            <Button href='/projects'>browse projects</Button>
+          </div>
+        </div>
+
+        <div className='grid gap-8 md:grid-cols-3'>
+          <div className='grid gap-3'>
+            <p className='text-[10px] font-semibold uppercase tracking-[0.3em] text-[#786f64]'>Navigate</p>
+            <div className='grid gap-2 text-sm leading-7 text-[#5d554b]'>
+              <Link to={getRegionRoute('india')} className='transition hover:text-black'>
+                India home
+              </Link>
+              <Link to={getRegionRoute('dubai')} className='transition hover:text-black'>
+                Dubai home
+              </Link>
+              {PRIMARY_LINKS.map((link) => (
+                <Link key={link.href} to={link.href} className='transition hover:text-black'>
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className='grid gap-3'>
+            <p className='text-[10px] font-semibold uppercase tracking-[0.3em] text-[#786f64]'>Studios</p>
+            <div className='grid gap-4 text-sm leading-7 text-[#5d554b]'>
+              <div>
+                <p className='font-semibold text-[#181411]'>Jaipur, India</p>
+                <p>C-Scheme, Rajasthan</p>
+                <a href='tel:+919828485111' className='transition hover:text-black'>
+                  +91 98284 85111
+                </a>
+              </div>
+              <div>
+                <p className='font-semibold text-[#181411]'>Dubai, UAE</p>
+                <p>Ibn Battuta, Jebel Ali</p>
+                <a href='tel:+971545052126' className='transition hover:text-black'>
+                  +971 54 505 2126
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className='grid gap-3'>
+            <p className='text-[10px] font-semibold uppercase tracking-[0.3em] text-[#786f64]'>Elsewhere</p>
+            <div className='grid gap-2 text-sm leading-7 text-[#5d554b]'>
+              {siteSocialLinks.map((link) => (
+                <a key={link.label} href={link.href} target='_blank' rel='noreferrer' className='transition hover:text-black'>
+                  {link.label}
+                </a>
+              ))}
+              <a href='mailto:studio@wanderlustarchitects.com' className='transition hover:text-black'>
+                studio@wanderlustarchitects.com
+              </a>
+            </div>
+          </div>
+        </div>
+      </Container>
+
+      <Container className='border-t border-black/10 py-4 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#786f64]'>
+        <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+          <p>Copyright {new Date().getFullYear()} Wanderlust Architects. All rights reserved.</p>
+          <Link to='/contact' className='inline-flex items-center gap-2 text-[#181411] transition hover:text-black'>
+            <span>Start an inquiry</span>
+            <ArrowRight size={14} />
+          </Link>
+        </div>
       </Container>
     </footer>
   );
@@ -410,37 +137,158 @@ export function SiteLayout({ children }: { children?: ReactNode }) {
   useScrollToTop();
   const pathname = useLocation().pathname;
   const navigate = useNavigate();
+  const isProjectsArchive = pathname === '/projects';
   const [activeRegion, setActiveRegion] = useState<SiteRegionKey>(() => getRegionKeyFromPathname(pathname));
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     setActiveRegion(getRegionKeyFromPathname(pathname));
+    setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const contact = useMemo(() => getContactByRegion(getRegionFromPathname(pathname)), [pathname]);
+  const homeHref = getRegionRoute(activeRegion);
+
+  const isActiveLink = (href: string) => {
+    if (href === homeHref) {
+      return pathname === '/india' || pathname === '/dubai';
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   const handleRegionSelect = (regionKey: SiteRegionKey) => {
     setActiveRegion(regionKey);
     persistSiteRegion(regionKey);
-
-    if (pathname === '/india' || pathname === '/dubai') {
-      navigate(getRegionRoute(regionKey));
-    }
+    navigate(getRegionRoute(regionKey));
   };
 
-  const region = useMemo(() => getContactByRegion(activeRegion === 'dubai' ? 'AE' : 'IN'), [activeRegion]);
-  const contact = region;
-  const shouldShowFooter = pathname !== '/projects';
-
   return (
-    <>
-      <Header activeRegion={activeRegion} onRegionSelect={handleRegionSelect} />
+    <div className='relative min-h-screen bg-[#f3ece2] text-[#15120f]'>
+      {!isProjectsArchive ? <div className='site-grain pointer-events-none fixed inset-0 z-0 opacity-35' /> : null}
+
+      {!isProjectsArchive ? (
+        <header className='sticky top-0 z-50'>
+          <Container className='pt-4'>
+            <div
+              className={cn(
+                'border border-black/10 px-4 py-3 backdrop-blur-xl transition sm:px-5',
+                scrolled ? 'bg-[rgba(248,243,234,0.92)] shadow-[0_18px_54px_-40px_rgba(13,11,8,0.28)]' : 'bg-[rgba(248,243,234,0.74)]',
+              )}
+            >
+              <div className='flex items-center justify-between gap-4'>
+                <Link to={homeHref} className='min-w-0'>
+                  <BrandLogo className='justify-start gap-2.5' iconClassName='h-7 w-auto sm:h-8' textClassName='truncate text-[9px] tracking-[0.3em] sm:text-[10px]' />
+                </Link>
+
+                <nav className='hidden items-center gap-1 xl:flex' aria-label='Primary'>
+                  <NavLink href={homeHref} label='Home' active={isActiveLink(homeHref)} />
+                  {PRIMARY_LINKS.map((link) => (
+                    <NavLink key={link.href} href={link.href} label={link.label} active={isActiveLink(link.href)} />
+                  ))}
+                </nav>
+
+                <div className='hidden items-center gap-3 xl:flex'>
+                  <div className='flex items-center gap-1 border border-black/10 bg-white/78 px-1 py-1'>
+                    {(['india', 'dubai'] as SiteRegionKey[]).map((regionKey) => {
+                      const active = activeRegion === regionKey;
+
+                      return (
+                        <button
+                          key={regionKey}
+                          type='button'
+                          onClick={() => handleRegionSelect(regionKey)}
+                          className={cn(
+                            'px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] transition',
+                            active ? 'bg-black text-white' : 'text-[#5e564c] hover:text-black',
+                          )}
+                        >
+                          {regionKey === 'dubai' ? 'UAE' : 'India'}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <Button href='/contact'>start inquiry</Button>
+                </div>
+
+                <button
+                  type='button'
+                  className='inline-flex h-11 w-11 items-center justify-center border border-black/10 text-black xl:hidden'
+                  onClick={() => setOpen((current) => !current)}
+                  aria-expanded={open}
+                  aria-label='Toggle navigation'
+                >
+                  {open ? <X size={18} /> : <Menu size={18} />}
+                </button>
+              </div>
+
+              <div
+                className={cn(
+                  'grid overflow-hidden transition-[grid-template-rows,opacity,margin-top] duration-300 xl:hidden',
+                  open ? 'mt-4 opacity-100 [grid-template-rows:1fr]' : 'mt-0 opacity-0 [grid-template-rows:0fr]',
+                )}
+              >
+                <div className='overflow-hidden border-t border-black/10 pt-4'>
+                  <div className='grid gap-3'>
+                    <div className='flex items-center gap-1 border border-black/10 bg-white/78 px-1 py-1'>
+                      {(['india', 'dubai'] as SiteRegionKey[]).map((regionKey) => {
+                        const active = activeRegion === regionKey;
+
+                        return (
+                          <button
+                            key={regionKey}
+                            type='button'
+                            onClick={() => handleRegionSelect(regionKey)}
+                            className={cn(
+                              'flex-1 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] transition',
+                              active ? 'bg-black text-white' : 'text-[#5e564c] hover:text-black',
+                            )}
+                          >
+                            {regionKey === 'dubai' ? 'UAE' : 'India'}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className='grid gap-2'>
+                      <NavLink href={homeHref} label='Home' active={isActiveLink(homeHref)} onClick={() => setOpen(false)} />
+                      {PRIMARY_LINKS.map((link) => (
+                        <NavLink key={link.href} href={link.href} label={link.label} active={isActiveLink(link.href)} onClick={() => setOpen(false)} />
+                      ))}
+                    </div>
+
+                    <Button href='/contact' className='w-full' onClick={() => setOpen(false)}>
+                      start inquiry
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Container>
+        </header>
+      ) : null}
+
       <a
         href='#main-content'
-        className='sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-white focus:px-4 focus:py-2'
+        className='sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:border focus:border-black focus:bg-white focus:px-4 focus:py-2'
       >
         Skip to content
       </a>
-      <main id='main-content'>{children ?? <Outlet />}</main>
+
+      <main id='main-content' className='relative z-10'>
+        {children ?? <Outlet />}
+      </main>
+
       <FloatingWhatsAppButton href={contact.whatsapp} />
-      {shouldShowFooter ? <Footer /> : null}
-    </>
+      <Footer />
+    </div>
   );
 }

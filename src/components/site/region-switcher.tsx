@@ -12,15 +12,15 @@ interface RegionSwitcherProps {
 const sizeClasses = {
   sm: {
     container: 'gap-1 p-1',
-    button: 'px-3 py-1.5 text-[10px] tracking-[0.18em]',
+    button: 'px-3 py-1.5 text-[10px] tracking-[0.24em]',
   },
   md: {
     container: 'gap-1 p-1',
-    button: 'px-3.5 py-1.5 text-[10px] tracking-[0.18em]',
+    button: 'px-3.5 py-1.5 text-[10px] tracking-[0.24em]',
   },
   lg: {
     container: 'gap-1.5 p-1.5',
-    button: 'px-5 py-2.5 text-xs tracking-[0.24em]',
+    button: 'px-5 py-2.5 text-xs tracking-[0.28em]',
   },
 } as const;
 
@@ -36,9 +36,9 @@ export function RegionSwitcher({
   return (
     <div
       className={cn(
-        'inline-flex items-center rounded-full',
+        'inline-flex items-center',
         scale.container,
-        inverted ? 'border border-white/24 bg-white/10' : 'border border-black/12 bg-white/88',
+        inverted ? 'border border-white/16 bg-black/24 backdrop-blur-md' : 'border border-black/12 bg-[#f6f2ea]/88 backdrop-blur-md',
         className,
       )}
       aria-label='Region switcher'
@@ -57,15 +57,15 @@ export function RegionSwitcher({
             onClick={() => onSelect(option.key as SiteRegionKey)}
             aria-pressed={isActive}
             className={cn(
-              'rounded-full font-medium uppercase transition-colors duration-300',
+              'font-semibold uppercase transition-colors duration-300',
               scale.button,
               inverted
                 ? isActive
                   ? 'bg-white text-black'
-                  : 'text-white/78 hover:bg-white/12 hover:text-white'
+                  : 'text-white/72 hover:bg-white/10 hover:text-white'
                 : isActive
                   ? 'bg-black text-white'
-                  : 'text-black/72 hover:bg-black hover:text-white',
+                  : 'text-black/68 hover:bg-black hover:text-white',
             )}
           >
             {option.label}

@@ -5,7 +5,7 @@ import { cn } from '@/app/components/ui/utils';
 
 export function Container({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10', className)} {...props}>
+    <div className={cn('mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-10 xl:px-12', className)} {...props}>
       {children}
     </div>
   );
@@ -20,9 +20,9 @@ type ButtonProps = {
   AnchorHTMLAttributes<HTMLAnchorElement>;
 
 const buttonVariants = {
-  primary: 'border border-ink bg-ink text-smoke hover:bg-black hover:tracking-[0.26em]',
-  ghost: 'border border-ink bg-transparent text-ink hover:bg-ink hover:text-smoke hover:tracking-[0.26em]',
-  subtle: 'border border-mist bg-white text-ink hover:border-ink hover:bg-smoke',
+  primary: 'border border-ink bg-ink !text-white shadow-[0_20px_44px_-28px_rgba(0,0,0,0.55)] hover:bg-[#23211e] hover:border-[#23211e]',
+  ghost: 'border border-ink/20 bg-transparent text-ink hover:border-ink hover:bg-ink hover:text-white',
+  subtle: 'border border-black/12 bg-[#fbf8f2] text-ink hover:border-black/22 hover:bg-white',
 };
 
 function isExternalHref(href: string) {
@@ -31,7 +31,7 @@ function isExternalHref(href: string) {
 
 export function Button({ href, variant = 'primary', className, children, ...props }: ButtonProps) {
   const classes = cn(
-    'inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-xs uppercase tracking-[0.22em] transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/50 disabled:cursor-not-allowed disabled:opacity-50',
+    'inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-none px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/50 disabled:cursor-not-allowed disabled:opacity-50',
     buttonVariants[variant],
     className,
   );
@@ -46,7 +46,7 @@ export function Button({ href, variant = 'primary', className, children, ...prop
     }
 
     return (
-      <Link to={href} className={classes}>
+      <Link to={href} className={classes} {...props}>
         {children}
       </Link>
     );
@@ -61,7 +61,7 @@ export function Button({ href, variant = 'primary', className, children, ...prop
 
 export function Card({ className, children, ...props }: HTMLAttributes<HTMLElement>) {
   return (
-    <article className={cn('rounded-xl border border-mist bg-white shadow-soft', className)} {...props}>
+    <article className={cn('border border-black/12 bg-[#fbf8f2] shadow-soft', className)} {...props}>
       {children}
     </article>
   );
@@ -69,7 +69,7 @@ export function Card({ className, children, ...props }: HTMLAttributes<HTMLEleme
 
 export function Badge({ className, children, ...props }: HTMLAttributes<HTMLSpanElement>) {
   return (
-    <span className={cn('inline-flex border border-mist px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-iron', className)} {...props}>
+    <span className={cn('inline-flex border border-black/12 bg-white/86 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-iron', className)} {...props}>
       {children}
     </span>
   );
@@ -93,8 +93,8 @@ export function Tabs<T extends string>({ items, active, onChange }: TabsProps<T>
             type='button'
             onClick={() => onChange(item)}
             className={cn(
-              'rounded-md border px-4 py-2 text-xs uppercase tracking-[0.18em] transition-colors duration-300',
-              isActive ? 'border-ink bg-ink text-smoke' : 'border-mist bg-white text-iron hover:border-ink hover:text-ink',
+              'border px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.22em] transition-colors duration-300',
+              isActive ? 'border-ink bg-ink text-white' : 'border-black/12 bg-[#fbf8f2] text-iron hover:border-ink hover:text-ink',
             )}
             aria-pressed={isActive}
           >
@@ -111,7 +111,7 @@ export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={cn(
-        'w-full rounded-md border border-silver bg-white px-4 py-3 text-sm text-ink outline-none transition-colors duration-300 placeholder:text-iron focus:border-ink focus:ring-1 focus:ring-ink/50',
+        'w-full border border-black/12 bg-[#fbf8f2] px-4 py-3 text-sm text-ink outline-none transition-colors duration-300 placeholder:text-iron focus:border-ink focus:ring-1 focus:ring-ink/50',
         props.className,
       )}
     />
@@ -123,7 +123,7 @@ export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
     <textarea
       {...props}
       className={cn(
-        'w-full rounded-md border border-silver bg-white px-4 py-3 text-sm text-ink outline-none transition-colors duration-300 placeholder:text-iron focus:border-ink focus:ring-1 focus:ring-ink/50',
+        'w-full border border-black/12 bg-[#fbf8f2] px-4 py-3 text-sm text-ink outline-none transition-colors duration-300 placeholder:text-iron focus:border-ink focus:ring-1 focus:ring-ink/50',
         props.className,
       )}
     />
@@ -143,12 +143,12 @@ export function SectionTitle({ eyebrow, title, description = '', align = 'left',
     <div className={cn('space-y-5', align === 'center' && 'mx-auto text-center', className)}>
       {eyebrow ? (
         <div className={cn('flex items-center gap-3', align === 'center' && 'justify-center')}>
-          <span className='h-px w-10 bg-gradient-to-r from-silver/10 via-silver to-silver/10' />
-          <p className='text-[11px] uppercase tracking-[0.24em] text-iron'>{eyebrow}</p>
+          <span className='h-px w-12 bg-gradient-to-r from-black/0 via-black/40 to-black/0' />
+          <p className='text-[10px] font-semibold uppercase tracking-[0.3em] text-iron'>{eyebrow}</p>
         </div>
       ) : null}
-      <h2 className='text-3xl font-medium leading-[1.08] text-ink [text-wrap:balance] sm:text-5xl lg:text-6xl'>{title}</h2>
-      {description ? <p className='max-w-2xl text-sm text-iron sm:text-base'>{description}</p> : null}
+      <h2 className='max-w-[18ch] text-[clamp(2.5rem,5vw,5.6rem)] font-medium leading-[0.92] text-ink [text-wrap:balance]'>{title}</h2>
+      {description ? <p className='max-w-2xl text-sm leading-7 text-iron sm:text-base'>{description}</p> : null}
     </div>
   );
 }

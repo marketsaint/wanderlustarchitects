@@ -25,72 +25,6 @@ export interface ProjectRecord {
 
 const studioName = 'Wanderlust Architects';
 
-const sharedSections: ProjectSection[] = [
-  {
-    title: 'Project Overview',
-    paragraphs: [
-      'This project, designed by Wanderlust Architects, represents a thoughtful blend of architectural planning, functional clarity, and aesthetic expression. The design process focused on understanding site conditions, user requirements, and the broader contextual environment so the built experience feels both distinctive and grounded.',
-      'By carefully analysing spatial relationships and operational needs, the architectural approach balances form and function. Circulation patterns, structural layout, and interior planning work together to create a cohesive environment that supports everyday use as well as special moments within the space.',
-    ],
-  },
-  {
-    title: 'Design Brief',
-    paragraphs: [
-      'The brief called for a space that would be efficient, visually engaging, and adaptable to evolving needs. Wanderlust Architects responded with a strong emphasis on planning clarity, long-term usability, and a spatial language that feels refined without compromising performance.',
-      'The client required an environment that reflects quality, attention to detail, and a carefully crafted user experience. To achieve that, the design integrates architectural discipline with interior strategies that prioritise comfort, harmony, and practical day-to-day function.',
-    ],
-  },
-  {
-    title: 'Architectural Concept',
-    paragraphs: [
-      'The architectural concept focuses on simplicity, proportion, and spatial clarity rather than excessive ornamentation. Strong forms, balanced geometry, and thoughtful material application create a language that feels timeless and adaptable.',
-      'Key architectural elements guide the overall identity of the project, including structured facades, controlled spatial volumes, and circulation pathways that help users move intuitively through the environment.',
-    ],
-  },
-  {
-    title: 'Spatial Planning Strategy',
-    paragraphs: [
-      'Effective spatial planning plays a central role in the success of the project. The layout was developed so that every area serves a clear purpose while maintaining visual continuity across the built environment.',
-      'Private, semi-public, and public zones are organised with intention where required. This zoning strategy improves usability and helps the architecture support a range of activities and operational requirements with clarity.',
-    ],
-  },
-  {
-    title: 'Material and Interior Palette',
-    paragraphs: [
-      'Material selection shapes the character of the project through a palette centred on durability, visual refinement, and contextual compatibility. The finishes were chosen to feel sophisticated without overwhelming the architecture itself.',
-      'Neutral tones, layered textures, and carefully selected materials contribute to a calm and enduring atmosphere while also supporting ease of maintenance and long-term performance.',
-    ],
-  },
-  {
-    title: 'Lighting Strategy',
-    paragraphs: [
-      'Lighting is used strategically to enhance the architectural character of the project. Natural light is prioritised wherever possible to create an inviting and comfortable atmosphere through the day.',
-      'Ambient, accent, and task lighting layers are introduced to support functionality and visual drama after dark. This layered approach allows the environment to adapt to different moods and operational needs.',
-    ],
-  },
-  {
-    title: 'User Experience and Circulation',
-    paragraphs: [
-      'User movement through the space was carefully studied throughout the design process. Circulation paths are intuitive and unobstructed so visitors can move comfortably and read the space with ease.',
-      'Wide pathways, clear sightlines, and strategically placed focal points help guide movement while maintaining overall spatial balance. The result is an experience in which functionality and aesthetics support one another.',
-    ],
-  },
-  {
-    title: 'Project Outcome',
-    paragraphs: [
-      'The final outcome reflects Wanderlust Architects\' commitment to creating spaces that combine architectural integrity with functional excellence. The project demonstrates how thoughtful design can transform a programme into an engaging spatial experience.',
-      'By balancing expression with operational practicality, the finished environment is both visually compelling and highly usable for the people it serves.',
-    ],
-  },
-  {
-    title: 'Conclusion',
-    paragraphs: [
-      'This project stands as an example of Wanderlust Architects\' approach to contemporary architecture and interior design. Through careful planning, material selection, and attention to spatial experience, the design achieves a measured balance between aesthetics and usability.',
-      'It contributes to the studio\'s growing body of work that prioritises thoughtful design, technical clarity, and enduring visual character.',
-    ],
-  },
-];
-
 const rawProjects = [
   {
     title: 'Plush Banquet Venue Ranthambore',
@@ -265,6 +199,8 @@ const rawProjects = [
   },
 ];
 
+type RawProject = (typeof rawProjects)[number];
+
 function inferCategory(projectType: string): ProjectCategory {
   const type = projectType.toLowerCase();
 
@@ -310,6 +246,163 @@ function buildSlug(title: string) {
     .replace(/(^-|-$)/g, '');
 }
 
+function getLocationContext(location: string) {
+  const normalized = location.toLowerCase();
+
+  if (normalized.includes('goa')) {
+    return 'coastal light, humid air, and a slower resort rhythm';
+  }
+
+  if (normalized.includes('jaipur')) {
+    return 'desert light, heat control, and a strong relationship to shade and stone';
+  }
+
+  if (normalized.includes('rajasthan')) {
+    return 'sun-heavy days, ceremonial scale, and an expectation of tactile material depth';
+  }
+
+  if (normalized.includes('uttarakhand')) {
+    return 'a softer landscape setting and a need for social zones that still feel grounded';
+  }
+
+  return 'local climate, project pace, and long-term durability';
+}
+
+function getProgrammeLens(projectType: string) {
+  const type = projectType.toLowerCase();
+
+  if (type.includes('banquet') || type.includes('wedding')) {
+    return {
+      ambition: 'arrival, celebration, and guest movement',
+      planning: 'a procession from arrival to gathering spaces, service support, and event staging',
+      mood: 'warmly ceremonial rather than over-decorated',
+      material: 'stone, textured plaster, warm metals, and resilient hospitality finishes',
+      user: 'guests and hosts',
+      delivery: 'event operations, lighting flexibility, and maintenance-readiness',
+    };
+  }
+
+  if (type.includes('resort') || type.includes('cottages') || type.includes('retreat')) {
+    return {
+      ambition: 'rest, privacy, and a memorable sense of escape',
+      planning: 'shared hospitality amenities with quieter pockets for retreat and landscape immersion',
+      mood: 'slow, restorative, and quietly premium',
+      material: 'weathered stone, warm timber notes, soft mineral plaster, and low-glare lighting',
+      user: 'guests',
+      delivery: 'repeat guest comfort, back-of-house coordination, and materials that age gracefully',
+    };
+  }
+
+  if (type.includes('restaurant') || type.includes('salon') || type.includes('showroom')) {
+    return {
+      ambition: 'brand presence, memorable experience, and a strong customer journey',
+      planning: 'front-facing experience zones supported by efficient back-of-house or staff movement',
+      mood: 'composed, tactile, and visually distinct without becoming noisy',
+      material: 'durable natural finishes, crafted highlights, and lighting that flatters people and products',
+      user: 'visitors and staff',
+      delivery: 'high-touch detailing, operational durability, and clear focal moments',
+    };
+  }
+
+  if (type.includes('office')) {
+    return {
+      ambition: 'clarity, brand confidence, and daily efficiency',
+      planning: 'a careful balance between focused work zones, client-facing areas, and team collaboration',
+      mood: 'quietly executive with hospitality-led comfort',
+      material: 'muted stone tones, precise joinery, layered lighting, and restrained brand accents',
+      user: 'teams and visiting clients',
+      delivery: 'MEP coordination, acoustic control, and adaptable workstation planning',
+    };
+  }
+
+  if (type.includes('temple') || type.includes('heritage')) {
+    return {
+      ambition: 'continuity, respect, and careful renewal',
+      planning: 'documentation, preservation priorities, and visitor movement resolved without disturbing character',
+      mood: 'reverent, restrained, and materially honest',
+      material: 'repair-first finishes, locally legible surfaces, and interventions that do not compete with the original fabric',
+      user: 'visitors, caretakers, and the wider community',
+      delivery: 'survey accuracy, phased intervention, and site sensitivity',
+    };
+  }
+
+  if (type.includes('hostel')) {
+    return {
+      ambition: 'community, comfort, and efficient repeatable planning',
+      planning: 'social commons balanced with private rest zones and operational clarity',
+      mood: 'open, energetic, and still grounded in comfort',
+      material: 'hardworking finishes, simple textures, and durable joinery with warmth',
+      user: 'travellers and operators',
+      delivery: 'high-traffic durability, cleaning practicality, and efficient service routing',
+    };
+  }
+
+  if (type.includes('villa') || type.includes('farmhouse') || type.includes('residence') || type.includes('penthouse') || type.includes('outhouse')) {
+    return {
+      ambition: 'privacy, ease, and an elevated domestic rhythm',
+      planning: 'public entertaining spaces, quieter family zones, and a measured transition between indoors and outdoors',
+      mood: 'calm, tactile, and deeply livable',
+      material: 'natural stone, timber warmth, soft plaster, and low-contrast luxury finishes',
+      user: 'residents and invited guests',
+      delivery: 'joinery precision, lighting control, and comfort across everyday use',
+    };
+  }
+
+  return {
+    ambition: 'clarity, atmosphere, and long-term usability',
+    planning: 'clear zoning, intuitive movement, and adaptable support spaces',
+    mood: 'restrained, tactile, and composed',
+    material: 'durable surfaces, soft tonal contrast, and detailing that supports longevity',
+    user: 'users and visitors',
+    delivery: 'documentation discipline and site-ready coordination',
+  };
+}
+
+function buildProjectSections(project: RawProject & { category: ProjectCategory }) {
+  const lens = getProgrammeLens(project.projectType);
+  const context = getLocationContext(project.location);
+  const areaBand = `${project.area} of ${project.projectType.toLowerCase()} space`;
+  const categoryName = project.category.toLowerCase();
+
+  return [
+    {
+      title: 'Brief and Setting',
+      paragraphs: [
+        `${project.title} was developed in ${project.location} as a ${project.projectType.toLowerCase()} brief shaped around ${lens.ambition}. The design direction began with the realities of ${context}, translating the client's ambitions into an architectural language that feels specific to both site and programme.`,
+        `At ${areaBand}, the project needed to feel generous without losing control. Wanderlust Architects approached the brief by editing each move down to its essentials so scale, circulation, and atmosphere could work together instead of competing for attention.`,
+      ],
+    },
+    {
+      title: 'Spatial Strategy',
+      paragraphs: [
+        `The planning logic is anchored in ${lens.planning}. Rather than treating the project as a collection of separate rooms, the design reads as a sequence of calibrated transitions, allowing people to understand the space intuitively as they move through it.`,
+        `This strategy helps the ${categoryName} programme feel measured and calm. Primary zones are given presence, support spaces remain legible, and visual axes are used to create moments of pause, orientation, and release throughout the experience.`,
+      ],
+    },
+    {
+      title: 'Material Language',
+      paragraphs: [
+        `Materially, the project was imagined as ${lens.mood}. The palette leans on ${lens.material}, creating depth through texture, shadow, and tonal restraint rather than obvious display.`,
+        `That restraint matters because it allows the architecture to carry the emotional weight. Surfaces are chosen for the way they receive daylight, endure use, and keep the project feeling composed long after first handover.`,
+      ],
+    },
+    {
+      title: 'User Experience',
+      paragraphs: [
+        `The project is ultimately designed around ${lens.user}. Arrival, orientation, dwell time, and privacy are all considered part of the same user journey, ensuring the space feels intuitive whether it is being experienced for the first time or used every day.`,
+        `Attention was also placed on the smaller behavioural cues that shape memory: sightlines, thresholds, pauses before major volumes, and the balance between openness and enclosure. These are the details that make the experience feel intentional instead of generic.`,
+      ],
+    },
+    {
+      title: 'Execution and Outcome',
+      paragraphs: [
+        `From a delivery standpoint, the scheme prioritised ${lens.delivery}. Documentation and detailing were treated as extensions of the design idea so the built result could maintain its original tone without excessive compromise on site.`,
+        `The completed project adds to Wanderlust Architects' body of work by showing how ${project.projectType.toLowerCase()} projects can feel expressive, grounded, and highly usable at the same time. It is a study in how calm architecture can still leave a lasting impression.`,
+      ],
+    },
+  ] satisfies ProjectSection[];
+}
+
 export const projectCategories: ProjectFilter[] = [
   'All',
   'Hospitality',
@@ -332,7 +425,7 @@ export const projects: ProjectRecord[] = rawProjects.map((project, index) => ({
   studio: studioName,
   image: buildImagePath(project.imageName),
   summary: project.description,
-  sections: sharedSections,
+  sections: buildProjectSections({ ...project, category: inferCategory(project.projectType) }),
 }));
 
 export function getProjectById(id: number) {

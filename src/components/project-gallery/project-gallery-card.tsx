@@ -17,12 +17,14 @@ export function ProjectGalleryCard({ project, isActive, onSelect }: ProjectGalle
       onClick={onSelect}
       whileHover={{ y: -4 }}
       transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-      className={cn(
-        'group relative aspect-square w-full overflow-hidden border-[0.5px] border-[#dddddd] bg-white p-[2px] text-left transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2 focus-visible:ring-offset-white',
-        isActive ? 'border-[#111111] shadow-[0_16px_34px_-32px_rgba(0,0,0,0.24)]' : 'hover:border-[#b8b8b8]',
-      )}
+      className='group relative aspect-square w-full overflow-hidden bg-white p-px text-left transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2 focus-visible:ring-offset-white'
     >
-      <div className='relative h-full overflow-hidden border-[0.5px] border-[#e3e3e3] bg-white'>
+      <div
+        className={cn(
+          'relative h-full overflow-hidden transition-all duration-300',
+          isActive && 'shadow-[0_16px_34px_-32px_rgba(0,0,0,0.24)]',
+        )}
+      >
         <img
           src={project.image}
           alt={project.title}

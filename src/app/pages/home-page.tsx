@@ -1,12 +1,5 @@
-import { useLocation } from 'react-router';
-import { HomePageSections } from '@/components/site/home-sections';
-import { getContactByRegion, getProofBarCopy, getRegionFromPathname } from '@/lib/site-content';
+import { RegionHomePage } from '@/components/site/editorial-pages';
 
 export default function HomePage() {
-  const pathname = useLocation().pathname;
-  const region = getRegionFromPathname(pathname);
-  const contact = getContactByRegion(region);
-  const proofBarCopy = getProofBarCopy(region);
-
-  return <HomePageSections region={region} contact={contact} proofBarCopy={proofBarCopy} />;
+  return <RegionHomePage regionKey='india' />;
 }
