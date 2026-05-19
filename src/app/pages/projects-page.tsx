@@ -1,5 +1,5 @@
-import { ProjectsEditorialPage } from '@/components/site/editorial-pages';
+import { ProjectGallerySection } from '@/components/project-gallery/project-gallery-section';
 
 export default function ProjectsPage() {
-  return <ProjectsEditorialPage />;
+  return <ProjectGallerySection />;
 }

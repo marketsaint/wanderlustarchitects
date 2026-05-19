@@ -7,7 +7,7 @@ import { projects } from '../../lib/projects';
 
 const GRID_COLUMNS = 5;
 const CARD_SIZE = 220;
-const FRAME_GAP = 0;
+const GAP = 2;
 const VIEWPORT_PADDING = 6;
 const MAX_ZOOM_COLUMNS = 3;
 const PANEL_FALLBACK_HEIGHT = 280;
@@ -28,8 +28,8 @@ function getOverviewLayout(projectCount: number, width: number, height: number) 
 
   for (let columns = MAX_ZOOM_COLUMNS; columns <= projectCount; columns += 1) {
     const rows = Math.ceil(projectCount / columns);
-    const widthSize = (width - FRAME_GAP * (columns - 1)) / columns;
-    const heightSize = (height - FRAME_GAP * (rows - 1)) / rows;
+    const widthSize = (width - GAP * (columns - 1)) / columns;
+    const heightSize = (height - GAP * (rows - 1)) / rows;
     const cardSize = Math.floor(Math.min(widthSize, heightSize));
 
     if (cardSize > best.cardSize) {
@@ -77,7 +77,7 @@ export function ProjectGallerySection() {
       return CARD_SIZE;
     }
 
-    const maxCardSize = (contentWidth - FRAME_GAP * (MAX_ZOOM_COLUMNS - 1)) / MAX_ZOOM_COLUMNS;
+    const maxCardSize = (contentWidth - GAP * (MAX_ZOOM_COLUMNS - 1)) / MAX_ZOOM_COLUMNS;
     return lerp(overviewLayout.cardSize, maxCardSize, zoomProgress);
   }, [contentWidth, overviewLayout.cardSize, zoomProgress]);
 
@@ -86,7 +86,7 @@ export function ProjectGallerySection() {
       return GRID_COLUMNS;
     }
 
-    return clamp(Math.floor((contentWidth + FRAME_GAP) / (targetCardSize + FRAME_GAP)), MAX_ZOOM_COLUMNS, projects.length);
+    return clamp(Math.floor((contentWidth + GAP) / (targetCardSize + GAP)), MAX_ZOOM_COLUMNS, projects.length);
   }, [contentWidth, targetCardSize]);
 
   const columns = derivedColumns;
@@ -95,7 +95,7 @@ export function ProjectGallerySection() {
       return CARD_SIZE;
     }
 
-    return Math.floor((contentWidth - FRAME_GAP * (columns - 1)) / columns);
+    return Math.floor((contentWidth - GAP * (columns - 1)) / columns);
   }, [columns, contentWidth]);
 
   const selectedProject = projects.find((project) => project.id === selectedProjectId) ?? null;
@@ -109,8 +109,8 @@ export function ProjectGallerySection() {
   const selectedRow = selectedIndex >= 0 ? Math.floor(selectedIndex / columns) : -1;
   const totalColumns = Math.min(columns, projects.length);
   const baseRows = Math.ceil(projects.length / columns);
-  const contentWidthTotal = totalColumns * cardSize + Math.max(0, totalColumns - 1) * FRAME_GAP;
-  const contentHeight = baseRows * cardSize + Math.max(0, baseRows - 1) * FRAME_GAP + (selectedProject ? panelHeight + FRAME_GAP : 0);
+  const contentWidthTotal = totalColumns * cardSize + Math.max(0, totalColumns - 1) * GAP;
+  const contentHeight = baseRows * cardSize + Math.max(0, baseRows - 1) * GAP + (selectedProject ? panelHeight + GAP : 0);
   const maxPanX = Math.max(0, contentWidthTotal - contentWidth);
   const maxPanY = Math.max(0, contentHeight - contentHeightLimit);
   const isCanvasPannable = maxPanX > 0 || maxPanY > 0;
@@ -217,7 +217,7 @@ export function ProjectGallerySection() {
       return;
     }
 
-    const rowTop = selectedRow * (cardSize + FRAME_GAP);
+    const rowTop = selectedRow * (cardSize + GAP);
     viewportRef.current?.scrollTo({
       top: Math.max(0, rowTop - VIEWPORT_PADDING),
       behavior: 'smooth',
@@ -419,10 +419,8 @@ export function ProjectGallerySection() {
               <div
                 className='grid'
                 style={{
-                  gridTemplateColumns: `repeat(${columns}, ${cardSize}px)`,
-                  gap: `${FRAME_GAP}px`,
-                  width: 'max-content',
-                  marginInline: contentWidthTotal < contentWidth ? 'auto' : undefined,
+                  gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+                  gap: `${GAP}px`,
                 }}
               >
                 {canvasItems.map((item) => {

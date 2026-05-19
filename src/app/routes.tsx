@@ -1,16 +1,16 @@
 import { Navigate, createBrowserRouter } from 'react-router';
 import { SiteLayout } from '@/components/site/layout';
+import HomePage from './pages/home-page';
 import AboutPage from './pages/about-page';
-import BlogDetailPage from './pages/blog-detail-page';
 import BlogPage from './pages/blog-page';
+import BlogDetailPage from './pages/blog-detail-page';
 import CareerPage from './pages/career-page';
 import ContactPage from './pages/contact-page';
 import DubaiPage from './pages/dubai-page';
-import HomePage from './pages/home-page';
-import NotFoundPage from './pages/not-found-page';
-import ProjectDetailPage from './pages/project-detail-page';
-import ProjectsPage from './pages/projects-page';
 import RegionEntryPage from './pages/region-entry-page';
+import ProjectsPage from './pages/projects-page';
+import ProjectDetailPage from './pages/project-detail-page';
+import NotFoundPage from './pages/not-found-page';
 
 export const router = createBrowserRouter([
   {
@@ -62,17 +62,17 @@ export const router = createBrowserRouter([
         Component: ProjectsPage,
       },
       {
-        path: 'projects/:slug',
-        Component: ProjectDetailPage,
-      },
-      {
-        path: 'project/:slug',
-        Component: ProjectDetailPage,
-      },
-      {
         path: '*',
         Component: NotFoundPage,
       },
     ],
+  },
+  {
+    path: 'projects/:slug',
+    Component: ProjectDetailPage,
+  },
+  {
+    path: 'project/:slug',
+    Component: ProjectDetailPage,
   },
 ]);
